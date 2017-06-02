@@ -10,6 +10,7 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import com.kingja.trainingday.R;
 
@@ -19,7 +20,7 @@ import com.kingja.trainingday.R;
  * Author:KingJA
  * Email:kingjavip@gmail.com
  */
-public class RippleLinearLayout extends View {
+public class RippleLinearLayout extends LinearLayout {
     private String TAG = getClass().getSimpleName();
     private int pressedColor = getResources().getColor(R.color.k_half_grey);
     private int normalColor = getResources().getColor(R.color.k_transparent);

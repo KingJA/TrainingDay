@@ -1,10 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="k_black">#000000</color>
-    <color name="k_transparent">#00ffffff</color>
-    <color name="k_white">#ffffff</color>
-    <color name="k_grey">#bebebe</color>
-    <color name="k_half_grey">#33bebebe</color>
-    <color name="k_red">#800000</color>
-    <color name="k_blue">#004aab</color>
+
 </resources>

@@ -1,20 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-    android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/k_white"
+    android:orientation="vertical"
     tools:context="com.kingja.trainingday.MainActivity">
 
     <FrameLayout
-        android:layout_weight="1"
+        android:id="@+id/fl_main"
         android:layout_width="match_parent"
-        android:layout_height="0dp"/>
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
 
-    <com.kingja.trainingday.ui.RippleLinearLayout
-        android:id="@+id/rll"
+    <View
         android:layout_width="match_parent"
-        android:layout_height="50dp"/>
+        android:layout_height="1dp"
+        android:background="#ececec"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+
+        <com.kingja.trainingday.ui.RippleLinearLayout
+            android:id="@+id/rll_plane"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <android.support.v7.widget.AppCompatImageView
+                android:id="@+id/aiv_plane"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/svg_plan"/>
+
+            <TextView
+                android:id="@+id/tv_plane"
+                style="@style/font_b_12"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="计划"/>
+
+        </com.kingja.trainingday.ui.RippleLinearLayout>
+
+
+        <com.kingja.trainingday.ui.RippleLinearLayout
+            android:id="@+id/rll_personal"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <android.support.v7.widget.AppCompatImageView
+                android:id="@+id/aiv_personal"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/svg_personal"/>
+
+            <TextView
+                android:id="@+id/tv_personal"
+                style="@style/font_9_12"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="我的"/>
+        </com.kingja.trainingday.ui.RippleLinearLayout>
+
+    </LinearLayout>
+
 
 </LinearLayout>

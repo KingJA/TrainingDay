@@ -34,6 +34,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         initComponent(App.getContext().getAppComponent());
         initViewAndListener();
         initNet();
+        initData();
         ActivityUtil.getInstance().addActivity(this);
     }
 
@@ -70,6 +71,9 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     /*初始化网络数据*/
     protected abstract void initNet();
+
+    /*初始化数据*/
+    protected abstract void initData();
 
 
     /*提供全局AppComponent*/

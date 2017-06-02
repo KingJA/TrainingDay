@@ -1,1 +1,1 @@
-include ':app', ':lib-res'
+include ':app', ':lib-res', ':rxbus2'

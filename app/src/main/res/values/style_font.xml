@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="font_b_12">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/k_black</item>
+    </style>
+
+    <style name="font_9_12">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/k_font_9</item>
+    </style>
+
+    <style name="font_9_15">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">@color/k_font_9</item>
+    </style>
+
+    <style name="font_3_12">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/k_font_3</item>
+    </style>
+
+    <style name="font_3_15">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">@color/k_font_3</item>
+    </style>
+
+    <style name="font_6_12">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/k_font_6</item>
+    </style>
+
+    <style name="font_6_15">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">@color/k_font_6</item>
+    </style>
+
+    <style name="font_green_12">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/k_green</item>
+    </style>
+
+    <style name="font_green_15">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">@color/k_green</item>
+    </style>
+
+
+    <style name="font_b_18">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/k_black</item>
+    </style>
+</resources>

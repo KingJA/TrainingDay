@@ -8,4 +8,6 @@ ext {
     appName = "训练日"
 
     supportVersion = '25.3.1'
+    rxjava2 = '2.1.0'
+    rxjava2android = '2.0.1'
 }

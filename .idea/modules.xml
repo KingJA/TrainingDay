@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/TrainingDay.iml" filepath="$PROJECT_DIR$/TrainingDay.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/lib-res/lib-res.iml" filepath="$PROJECT_DIR$/lib-res/lib-res.iml" />
+      <module fileurl="file://$PROJECT_DIR$/rxbus2/rxbus2.iml" filepath="$PROJECT_DIR$/rxbus2/rxbus2.iml" />
     </modules>
   </component>
 </project>
