@@ -37,6 +37,7 @@ public abstract class BaseFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initCommon();
+        initVariable();
         initComponent(App.getContext().getAppComponent());
         initViewAndListener();
         initNet();
@@ -54,8 +55,9 @@ public abstract class BaseFragment extends Fragment {
         }
     }
 
-    protected abstract void initComponent(AppComponent appComponent);
 
+    protected abstract void initVariable();
+    protected abstract void initComponent(AppComponent appComponent);
     protected abstract void initViewAndListener();
     protected abstract void initNet();
 
@@ -77,9 +79,4 @@ public abstract class BaseFragment extends Fragment {
         unbinder.unbind();
     }
 
-    @Override
-    public void onHiddenChanged(boolean hidden) {
-        super.onHiddenChanged(hidden);
-        Log.e(TAG, "onHiddenChanged: "+hidden );
-    }
 }

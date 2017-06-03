@@ -1,4 +1,4 @@
-package com.kingja.trainingday.dao;
+package com.kingja.trainingday.greendao;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

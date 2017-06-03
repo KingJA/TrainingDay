@@ -28,10 +28,6 @@ public abstract class BaseTitleActivity extends BaseActivity {
     @BindView(R.id.tv_right)
     TextView tvRight;
 
-    @Override
-    public void initVariable() {
-
-    }
 
     @Override
     public int getContentId() {
@@ -75,6 +71,8 @@ public abstract class BaseTitleActivity extends BaseActivity {
         void onRightClick();
     }
 
+    protected abstract void initVariable();
+
     protected abstract String getContentTitle();
 
     protected abstract int getContentView();
@@ -85,10 +83,4 @@ public abstract class BaseTitleActivity extends BaseActivity {
 
     protected abstract void initData();
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // TODO: add setContentView(...) invocation
-        ButterKnife.bind(this);
-    }
 }

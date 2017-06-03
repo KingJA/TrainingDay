@@ -24,15 +24,19 @@ android {
     greendao {
         targetGenDir 'src/main/java'
         schemaVersion 1
-        daoPackage 'com.kingja.trainingday.dao'//生成文件目录
+        daoPackage 'com.kingja.trainingday.greendao'//生成文件目录
+    }
+    compileOptions {
+        targetCompatibility 1.8
+        sourceCompatibility 1.8
     }
 }
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     /*support*/
     compile "com.android.support:appcompat-v7:$rootProject.ext.supportVersion"
-    compile "com.android.support:cardview-v7:$rootProject.ext.supportVersion"
     compile "com.android.support:recyclerview-v7:$rootProject.ext.supportVersion"
+    compile "com.android.support:cardview-v7:$rootProject.ext.supportVersion"
     /*rxjava*/
     compile "io.reactivex.rxjava2:rxjava:$rootProject.ext.rxjava2"
     compile "io.reactivex.rxjava2:rxandroid:$rootProject.ext.rxjava2android"
@@ -51,4 +55,5 @@ dependencies {
     /*module*/
     compile project(':lib-res')
     compile project(':rxbus2')
+    compile project(':recyclerviewhelper')
 }

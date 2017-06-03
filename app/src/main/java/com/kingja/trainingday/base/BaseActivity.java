@@ -58,10 +58,10 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     /*获取初始化数据*/
-    public abstract void initVariable();
+    protected abstract void initVariable();
 
     /*获取界面Id*/
-    public abstract int getContentId();
+    protected abstract int getContentId();
 
     /*依赖注入*/
     protected abstract void initComponent(AppComponent appComponent);

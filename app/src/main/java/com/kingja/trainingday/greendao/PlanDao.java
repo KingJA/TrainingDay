@@ -1,4 +1,4 @@
-package com.kingja.trainingday.dao;
+package com.kingja.trainingday.greendao;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteStatement;
@@ -27,8 +27,10 @@ public class PlanDao extends AbstractDao<Plan, String> {
         public final static Property PlanId = new Property(0, String.class, "planId", true, "PLAN_ID");
         public final static Property StartDate = new Property(1, String.class, "startDate", false, "START_DATE");
         public final static Property EndDate = new Property(2, String.class, "endDate", false, "END_DATE");
-        public final static Property PlanDays = new Property(3, String.class, "planDays", false, "PLAN_DAYS");
+        public final static Property PlanDays = new Property(3, int.class, "planDays", false, "PLAN_DAYS");
         public final static Property PlanContent = new Property(4, String.class, "planContent", false, "PLAN_CONTENT");
+        public final static Property Gift = new Property(5, String.class, "gift", false, "GIFT");
+        public final static Property CreateTime = new Property(6, String.class, "createTime", false, "CREATE_TIME");
     }
 
 
@@ -47,8 +49,10 @@ public class PlanDao extends AbstractDao<Plan, String> {
                 "\"PLAN_ID\" TEXT PRIMARY KEY NOT NULL ," + // 0: planId
                 "\"START_DATE\" TEXT," + // 1: startDate
                 "\"END_DATE\" TEXT," + // 2: endDate
-                "\"PLAN_DAYS\" TEXT," + // 3: planDays
-                "\"PLAN_CONTENT\" TEXT);"); // 4: planContent
+                "\"PLAN_DAYS\" INTEGER NOT NULL ," + // 3: planDays
+                "\"PLAN_CONTENT\" TEXT," + // 4: planContent
+                "\"GIFT\" TEXT," + // 5: gift
+                "\"CREATE_TIME\" TEXT);"); // 6: createTime
     }
 
     /** Drops the underlying database table. */
@@ -75,15 +79,21 @@ public class PlanDao extends AbstractDao<Plan, String> {
         if (endDate != null) {
             stmt.bindString(3, endDate);
         }
- 
-        String planDays = entity.getPlanDays();
-        if (planDays != null) {
-            stmt.bindString(4, planDays);
-        }
+        stmt.bindLong(4, entity.getPlanDays());
  
         String planContent = entity.getPlanContent();
         if (planContent != null) {
             stmt.bindString(5, planContent);
+        }
+ 
+        String gift = entity.getGift();
+        if (gift != null) {
+            stmt.bindString(6, gift);
+        }
+ 
+        String createTime = entity.getCreateTime();
+        if (createTime != null) {
+            stmt.bindString(7, createTime);
         }
     }
 
@@ -105,15 +115,21 @@ public class PlanDao extends AbstractDao<Plan, String> {
         if (endDate != null) {
             stmt.bindString(3, endDate);
         }
- 
-        String planDays = entity.getPlanDays();
-        if (planDays != null) {
-            stmt.bindString(4, planDays);
-        }
+        stmt.bindLong(4, entity.getPlanDays());
  
         String planContent = entity.getPlanContent();
         if (planContent != null) {
             stmt.bindString(5, planContent);
+        }
+ 
+        String gift = entity.getGift();
+        if (gift != null) {
+            stmt.bindString(6, gift);
+        }
+ 
+        String createTime = entity.getCreateTime();
+        if (createTime != null) {
+            stmt.bindString(7, createTime);
         }
     }
 
@@ -128,8 +144,10 @@ public class PlanDao extends AbstractDao<Plan, String> {
             cursor.isNull(offset + 0) ? null : cursor.getString(offset + 0), // planId
             cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // startDate
             cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // endDate
-            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // planDays
-            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4) // planContent
+            cursor.getInt(offset + 3), // planDays
+            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // planContent
+            cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // gift
+            cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6) // createTime
         );
         return entity;
     }
@@ -139,8 +157,10 @@ public class PlanDao extends AbstractDao<Plan, String> {
         entity.setPlanId(cursor.isNull(offset + 0) ? null : cursor.getString(offset + 0));
         entity.setStartDate(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
         entity.setEndDate(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
-        entity.setPlanDays(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
+        entity.setPlanDays(cursor.getInt(offset + 3));
         entity.setPlanContent(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
+        entity.setGift(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
+        entity.setCreateTime(cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6));
      }
     
     @Override

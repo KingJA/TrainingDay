@@ -4,6 +4,8 @@ import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Generated;
 
+import java.io.Serializable;
+
 /**
  * Description:TODO
  * Create Time:2017/6/2 10:58
@@ -11,21 +13,26 @@ import org.greenrobot.greendao.annotation.Generated;
  * Email:kingjavip@gmail.com
  */
 @Entity
-public class Plan {
+public class Plan implements Serializable{
+    private static final long serialVersionUID = -8858604263240302853L;
     @Id
     private String planId;
     private String startDate;
     private String endDate;
-    private String planDays;
+    private int planDays;
     private String planContent;
-    @Generated(hash = 89545549)
-    public Plan(String planId, String startDate, String endDate, String planDays,
-            String planContent) {
+    private String gift;
+    private String createTime;
+    @Generated(hash = 1194263838)
+    public Plan(String planId, String startDate, String endDate, int planDays,
+            String planContent, String gift, String createTime) {
         this.planId = planId;
         this.startDate = startDate;
         this.endDate = endDate;
         this.planDays = planDays;
         this.planContent = planContent;
+        this.gift = gift;
+        this.createTime = createTime;
     }
     @Generated(hash = 592612124)
     public Plan() {
@@ -48,10 +55,10 @@ public class Plan {
     public void setEndDate(String endDate) {
         this.endDate = endDate;
     }
-    public String getPlanDays() {
+    public int getPlanDays() {
         return this.planDays;
     }
-    public void setPlanDays(String planDays) {
+    public void setPlanDays(int planDays) {
         this.planDays = planDays;
     }
     public String getPlanContent() {
@@ -60,4 +67,17 @@ public class Plan {
     public void setPlanContent(String planContent) {
         this.planContent = planContent;
     }
+    public String getGift() {
+        return this.gift;
+    }
+    public void setGift(String gift) {
+        this.gift = gift;
+    }
+    public String getCreateTime() {
+        return this.createTime;
+    }
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
+    }
+
 }

@@ -1,4 +1,4 @@
-package com.kingja.trainingday.dao;
+package com.kingja.trainingday.greendao;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteStatement;

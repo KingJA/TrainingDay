@@ -17,6 +17,11 @@ public class PersonalFragment extends BaseFragment {
     }
 
     @Override
+    protected void initVariable() {
+
+    }
+
+    @Override
     protected void initViewAndListener() {
 
     }
