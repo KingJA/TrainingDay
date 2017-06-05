@@ -5,6 +5,8 @@
     <color name="colorAccent">#FF4081</color>
 
     <color name="k_black">#000000</color>
+    <color name="k_yellow">#aec23d</color>
+    <color name="k_yellow_light">#eff9b6</color>
     <color name="k_transparent">#00ffffff</color>
     <color name="k_white">#ffffff</color>
     <color name="k_grey">#bebebe</color>

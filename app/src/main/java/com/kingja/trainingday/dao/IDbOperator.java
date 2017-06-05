@@ -20,6 +20,10 @@ public interface IDbOperator {
 
     void removePlanDay(String id);
 
+    void getPlans(PlanDay planDay);
+
+    void updatePlanDays(PlanDay planDay);
+
     List<Plan> getPlans();
 
     List<PlanDay> getPlanDays(String planId);

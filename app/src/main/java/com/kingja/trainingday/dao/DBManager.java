@@ -101,4 +101,16 @@ public class DBManager implements IDbOperator {
                 (PlanDayDao.Properties.Date).list();
         return planDays;
     }
+
+    @Override
+    public void getPlans(PlanDay planDay) {
+        PlanDayDao planDao = getPlanDayDao();
+        planDao.update(planDay);
+    }
+
+    @Override
+    public void updatePlanDays(PlanDay planDay) {
+        PlanDayDao planDayDao = getPlanDayDao();
+        planDayDao.update(planDay);
+    }
 }

@@ -1,11 +1,14 @@
 package com.kingja.trainingday.activity;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.TypeEvaluator;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -13,6 +16,7 @@ import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewTreeObserver;
 import android.view.animation.Animation;
+import android.view.animation.OvershootInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.widget.TextView;
 import android.widget.ViewAnimator;
@@ -29,6 +33,7 @@ import com.kingja.trainingday.dao.DBManager;
 import com.kingja.trainingday.greendaobean.Plan;
 import com.kingja.trainingday.greendaobean.PlanDay;
 import com.kingja.trainingday.inject.commonent.AppComponent;
+import com.kingja.trainingday.util.ToastUtil;
 
 import java.util.List;
 
@@ -82,12 +87,6 @@ public class PlanDetailActivity extends BaseTitleActivity {
         aiv_sun = (AppCompatImageView) findViewById(R.id.aiv_sun);
 
         planDayAdapter = new PlanDayAdapter(this, planDays);
-        planDayAdapter.setOnItemClickListener((planDay, position) -> {
-
-            int[] location = planDayAdapter.getLocation(position);
-            Log.e(TAG, "x: " + location[0]);
-            Log.e(TAG, "y: " + location[1]);
-        });
         new RecyclerViewHelper.Builder(this)
                 .setAdapter(planDayAdapter)
                 .setLayoutStyle(LayoutHelper.LayoutStyle.GRID)
@@ -97,17 +96,6 @@ public class PlanDetailActivity extends BaseTitleActivity {
                 .build()
                 .attachToRecyclerView(mRvPlanDetail);
 
-        ViewTreeObserver vto2 = aiv_sun.getViewTreeObserver();
-        vto2.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                aiv_sun.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-                fromLocation = new int[2];
-                aiv_sun.getLocationOnScreen(fromLocation);
-                Log.e(TAG, "fromLocationX: " + fromLocation[0]);
-                Log.e(TAG, "fromLocationY: " + fromLocation[1]);
-            }
-        });
     }
 
     @Override
@@ -121,27 +109,28 @@ public class PlanDetailActivity extends BaseTitleActivity {
         mTvPlanContent.setText(plan.getPlanContent());
         mTvPlanGift.setText(plan.getGift());
         aiv_sun.setOnClickListener(v -> {
-            startStarAnimation(1);
+            startStarAnimation();
         });
     }
 
-    public void startStarAnimation(int position) {
-        int[] toLocation = planDayAdapter.getLocation(position);
-        Point point1 = new Point(fromLocation[0], fromLocation[1]);
-        Point point2 = new Point(toLocation[0], toLocation[1]);
-        ValueAnimator anim = ValueAnimator.ofObject(new PointEvaluator(), point1, point2);
-        anim.setDuration(5000);
-        anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+    public void startStarAnimation() {
+        int[] toLocation = planDayAdapter.getLocation();
+        if (toLocation == null) {
+            ToastUtil.showToast("已过期");
+            return;
+        }
+        aiv_sun.animate().translationX(toLocation[0] - fromLocation[0]).translationY(toLocation[1] - fromLocation[1])
+                .rotation(360).setDuration(2000).setListener(new AnimatorListenerAdapter() {
+
+
             @Override
-            public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                Point point = (Point) valueAnimator.getAnimatedValue();
-                Log.e(TAG, "pointx: "+point.getX() );
-                Log.e(TAG, "pointy: "+point.getY() );
-                aiv_sun.setX(point.getX());
-                aiv_sun.setY(point.getY());
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                aiv_sun.setColorFilter(getResources().getColor(R.color.k_yellow));
+                aiv_sun.setEnabled(false);
             }
-        });
-        anim.start();
+        }).start();
+
     }
 
     public static void goActivity(Context context, Plan plan, int position) {
@@ -150,5 +139,21 @@ public class PlanDetailActivity extends BaseTitleActivity {
         intent.putExtra("position", position);
         context.startActivity(intent);
 
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        fromLocation = new int[2];
+        aiv_sun.getLocationOnScreen(fromLocation);
+        Log.e(TAG, "fromLocationX: " + fromLocation[0]);
+        Log.e(TAG, "fromLocationY: " + fromLocation[1]);
+        getStateHegiht();
+    }
+
+    public int getStateHegiht() {
+        Rect rectangle = new Rect();
+        getWindow().getDecorView().getWindowVisibleDisplayFrame(rectangle);
+        return rectangle.top;
     }
 }

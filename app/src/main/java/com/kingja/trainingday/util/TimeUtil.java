@@ -17,7 +17,7 @@ public class TimeUtil {
     public static List<String> getDates(String fromTime, int days) {
         List<String> dates = new ArrayList<>();
         SimpleDateFormat fromFormat = new SimpleDateFormat("yyyy/MM/dd");
-        SimpleDateFormat toFormat = new SimpleDateFormat("MM/dd");
+//        SimpleDateFormat toFormat = new SimpleDateFormat("MM/dd");
         Calendar selectedDate = Calendar.getInstance();
         try {
             Date fromDate = fromFormat.parse(fromTime);
@@ -27,10 +27,24 @@ public class TimeUtil {
         }
         for (int i = 0; i < days; i++) {
             selectedDate.add(Calendar.DAY_OF_MONTH, i == 0 ? 0 : 1);
-            String date = toFormat.format(selectedDate.getTime());
+            String date = fromFormat.format(selectedDate.getTime());
             dates.add(date);
         }
         return dates;
+    }
+
+    public static String getDayTime(String fromTime) {
+        List<String> dates = new ArrayList<>();
+        SimpleDateFormat fromFormat = new SimpleDateFormat("yyyy/MM/dd");
+        SimpleDateFormat toFormat = new SimpleDateFormat("MM/dd");
+        Date fromDate = null;
+        try {
+            fromDate = fromFormat.parse(fromTime);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        String dayTimeStr = toFormat.format(fromDate);
+        return dayTimeStr;
     }
 
     public static String getEndDate(String startDate, int days) {
@@ -49,7 +63,13 @@ public class TimeUtil {
 
     public static String getNowTime() {
         Date date = new Date();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        return simpleDateFormat.format(date);
+    }
+
+    public static String getNowDate() {
+        Date date = new Date();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd");
         return simpleDateFormat.format(date);
     }
 }
