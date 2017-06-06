@@ -47,10 +47,30 @@ public class PlanDayAdapter extends BaseRvAdaper<PlanDay> {
         locationMap.put(position, holder.siv_star);
         holder.siv_star.setColorFilter(bean.getStatus() == 1 ? context.getResources().getColor(R.color.k_yellow) :
                 context.getResources().getColor(R.color.k_grey));
-        holder.cv_planDay.setCardBackgroundColor(bean.getStatus() == 1 ? context.getResources().getColor(R.color.k_yellow_light) :
-                context.getResources().getColor(R.color.k_white));
+        holder.cv_planDay.setCardBackgroundColor(getCardBackground(bean.getStatus()));
+        if (isToday(bean)) {
+            holder.cv_planDay.setCardBackgroundColor(context.getResources().getColor(R.color.k_yellow_light));
+        }
     }
 
+    public int getCardBackground(int statusCode) {
+        int colorId = 0;
+        switch (statusCode) {
+            case -1:
+                colorId = context.getResources().getColor(R.color.k_grey_light);
+                break;
+            case 0:
+                colorId = context.getResources().getColor(R.color.k_white);
+                break;
+            case 1:
+                colorId = context.getResources().getColor(R.color.k_green_light);
+                break;
+            default:
+                break;
+        }
+        return colorId;
+
+    }
 
     class ViewHolder extends BaseRvAdaper.ViewHolder {
         public TextView tv_detail_data;

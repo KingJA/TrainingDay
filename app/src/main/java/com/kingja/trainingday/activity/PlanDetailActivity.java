@@ -2,10 +2,6 @@ package com.kingja.trainingday.activity;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.animation.AnimatorSet;
-import android.animation.ObjectAnimator;
-import android.animation.TypeEvaluator;
-import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
@@ -13,28 +9,24 @@ import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewAnimationUtils;
-import android.view.ViewTreeObserver;
-import android.view.animation.Animation;
 import android.view.animation.OvershootInterpolator;
-import android.view.animation.TranslateAnimation;
 import android.widget.TextView;
-import android.widget.ViewAnimator;
 
-import com.kingja.recyclerviewhelper.BaseRvAdaper;
 import com.kingja.recyclerviewhelper.LayoutHelper;
 import com.kingja.recyclerviewhelper.RecyclerViewHelper;
 import com.kingja.trainingday.R;
 import com.kingja.trainingday.adapter.PlanDayAdapter;
-import com.kingja.trainingday.anim.Point;
-import com.kingja.trainingday.anim.PointEvaluator;
 import com.kingja.trainingday.base.BaseTitleActivity;
 import com.kingja.trainingday.dao.DBManager;
 import com.kingja.trainingday.greendaobean.Plan;
 import com.kingja.trainingday.greendaobean.PlanDay;
 import com.kingja.trainingday.inject.commonent.AppComponent;
+import com.kingja.trainingday.util.CheckUtil;
+import com.kingja.trainingday.util.TimeUtil;
 import com.kingja.trainingday.util.ToastUtil;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -55,6 +47,8 @@ public class PlanDetailActivity extends BaseTitleActivity {
     private Plan plan;
     private int[] fromLocation;
     private PlanDayAdapter planDayAdapter;
+    private TextView mTvSequenceDays;
+    private TextView mTvIsFinishedToday;
 
 
     @Override
@@ -62,6 +56,34 @@ public class PlanDetailActivity extends BaseTitleActivity {
         plan = (Plan) getIntent().getSerializableExtra("plan");
         planDays = DBManager.getInstance().getPlanDays(plan.getPlanId());
     }
+
+
+    private int getSequenceDays(List<PlanDay> planDays) {
+        List<Integer> maxSequenceDay = new ArrayList<>();
+        int sequenceDay = 0;
+        for (int i = 0; i < planDays.size(); i++) {
+            if (planDays.get(i).getStatus() == 1) {
+                sequenceDay++;
+                if (i == planDays.size() - 1) {
+                    maxSequenceDay.add(sequenceDay);
+                }
+            } else {
+                maxSequenceDay.add(sequenceDay);
+                sequenceDay = 0;
+            }
+        }
+        return Collections.max(maxSequenceDay);
+    }
+
+    private boolean isTodayFinished(List<PlanDay> planDays) {
+        for (PlanDay planDay : planDays) {
+            if (planDay.getDate().equals(TimeUtil.getNowDate()) && planDay.getStatus() == 1) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     @Override
     protected void initComponent(AppComponent appComponent) {
@@ -80,6 +102,8 @@ public class PlanDetailActivity extends BaseTitleActivity {
 
     @Override
     protected void initView() {
+        mTvSequenceDays = (TextView) findViewById(R.id.tv_sequenceDays);
+        mTvIsFinishedToday = (TextView) findViewById(R.id.tv_isFinishedToday);
         mTvPlanMonth = (TextView) findViewById(R.id.tv_planMonth);
         mTvPlanContent = (TextView) findViewById(R.id.tv_planContent);
         mTvPlanGift = (TextView) findViewById(R.id.tv_planGift);
@@ -105,7 +129,15 @@ public class PlanDetailActivity extends BaseTitleActivity {
 
     @Override
     protected void initData() {
-        mTvPlanMonth.setText(plan.getStartDate());
+        if (!CheckUtil.hasFinished(plan.getEndDate()) && !isTodayFinished(planDays)) {
+            aiv_sun.setVisibility(View.VISIBLE);
+        }
+        if (!CheckUtil.hasFinished(plan.getEndDate())) {
+            mTvIsFinishedToday.setVisibility(View.VISIBLE);
+        }
+        mTvSequenceDays.setText("连续完成" + getSequenceDays(planDays) + "天");
+        mTvIsFinishedToday.setText(isTodayFinished(planDays) ? "今日已完成" : "今日未完成");
+        mTvPlanMonth.setText(plan.getStartDate() + "-" + plan.getEndDate());
         mTvPlanContent.setText(plan.getPlanContent());
         mTvPlanGift.setText(plan.getGift());
         aiv_sun.setOnClickListener(v -> {
@@ -120,7 +152,7 @@ public class PlanDetailActivity extends BaseTitleActivity {
             return;
         }
         aiv_sun.animate().translationX(toLocation[0] - fromLocation[0]).translationY(toLocation[1] - fromLocation[1])
-                .rotation(360).setDuration(2000).setListener(new AnimatorListenerAdapter() {
+                .rotation(360).setInterpolator(new OvershootInterpolator()).setDuration(1500).setListener(new AnimatorListenerAdapter() {
 
 
             @Override
@@ -128,6 +160,7 @@ public class PlanDetailActivity extends BaseTitleActivity {
                 super.onAnimationEnd(animation);
                 aiv_sun.setColorFilter(getResources().getColor(R.color.k_yellow));
                 aiv_sun.setEnabled(false);
+                mTvIsFinishedToday.setText("今日已完成" );
             }
         }).start();
 

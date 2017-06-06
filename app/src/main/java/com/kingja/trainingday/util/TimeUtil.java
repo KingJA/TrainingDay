@@ -72,4 +72,19 @@ public class TimeUtil {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd");
         return simpleDateFormat.format(date);
     }
+
+
+    /*Data*/
+    public static List<String> getTestDates(int days,int before) {
+        List<String> dates = new ArrayList<>();
+        SimpleDateFormat fromFormat = new SimpleDateFormat("yyyy/MM/dd");
+        Calendar selectedDate = Calendar.getInstance();
+        selectedDate.add(Calendar.DAY_OF_MONTH,-before);
+        for (int i = 0; i < days; i++) {
+            selectedDate.add(Calendar.DAY_OF_MONTH, i == 0 ? 0 : 1);
+            String date = fromFormat.format(selectedDate.getTime());
+            dates.add(date);
+        }
+        return dates;
+    }
 }

@@ -27,4 +27,5 @@ public interface IDbOperator {
     List<Plan> getPlans();
 
     List<PlanDay> getPlanDays(String planId);
+    List<PlanDay> getPlanDays();
 }

@@ -103,6 +103,13 @@ public class DBManager implements IDbOperator {
     }
 
     @Override
+    public List<PlanDay> getPlanDays() {
+        PlanDayDao planDayDao = getPlanDayDao();
+        List<PlanDay> planDays = planDayDao.loadAll();
+        return planDays;
+    }
+
+    @Override
     public void getPlans(PlanDay planDay) {
         PlanDayDao planDao = getPlanDayDao();
         planDao.update(planDay);

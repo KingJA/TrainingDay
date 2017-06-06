@@ -2,6 +2,7 @@ package com.kingja.trainingday.util;
 
 import android.text.TextUtils;
 
+import java.text.DecimalFormat;
 import java.util.UUID;
 
 /**
@@ -13,5 +14,9 @@ import java.util.UUID;
 public class StringUtil {
     public static String getUUID() {
         return UUID.randomUUID().toString().replace("-", "");
+    }
+
+    public static String getPercent(int upNumber, int downNumber) {
+        return Math.round(upNumber * 100f / downNumber) + "%";
     }
 }

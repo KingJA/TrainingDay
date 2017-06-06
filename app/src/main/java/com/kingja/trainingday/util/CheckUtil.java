@@ -28,4 +28,18 @@ public class CheckUtil {
         }
         return true;
     }
+
+    public static boolean isBigger(String startDate, String endDate) {
+        if (startDate.compareTo(endDate) > 0) {
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean hasFinished(String endDate) {
+        if (TimeUtil.getNowDate().compareTo(endDate) > 0) {
+            return true;
+        }
+        return false;
+    }
 }

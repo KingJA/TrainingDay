@@ -3,11 +3,18 @@ package com.kingja.trainingday.base;
 import android.app.Application;
 import android.content.SharedPreferences;
 
+import com.kingja.trainingday.dao.DBManager;
+import com.kingja.trainingday.greendaobean.Plan;
+import com.kingja.trainingday.greendaobean.PlanDay;
 import com.kingja.trainingday.inject.commonent.AppComponent;
 import com.kingja.trainingday.inject.commonent.DaggerAppComponent;
 import com.kingja.trainingday.inject.module.AppModule;
+import com.kingja.trainingday.util.StringUtil;
+import com.kingja.trainingday.util.TestDataProvider;
+import com.kingja.trainingday.util.TimeUtil;
 import com.squareup.leakcanary.LeakCanary;
 
+import java.util.List;
 
 
 /**
@@ -15,7 +22,7 @@ import com.squareup.leakcanary.LeakCanary;
  * Create Time：2016/10/14:04
  * Author:KingJA
  * Email:kingjavip@gmail.com
- *
+ * <p>
  * 1.创建全局AppComponent
  * 2.对外提供方法获取AppComponent
  */
@@ -36,6 +43,14 @@ public class App extends Application {
         LeakCanary.install(this);
         this.sInstance = this;
         setupComponent();
+        initTestData();
+    }
+
+    private void initTestData() {
+        TestDataProvider.setNowPlanDay();
+        TestDataProvider.setFinishedPlanDay(1, 10);
+        TestDataProvider.setFinishedPlanDay(0, 20);
+        TestDataProvider.setFinishedPlanDay(-1, 30);
     }
 
     /**

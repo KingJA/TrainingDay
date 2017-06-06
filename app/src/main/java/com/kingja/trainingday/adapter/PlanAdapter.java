@@ -8,6 +8,8 @@ import android.widget.TextView;
 import com.kingja.recyclerviewhelper.BaseRvAdaper;
 import com.kingja.trainingday.R;
 import com.kingja.trainingday.greendaobean.Plan;
+import com.kingja.trainingday.util.CheckUtil;
+import com.kingja.trainingday.util.TimeUtil;
 
 import java.util.List;
 
@@ -42,6 +44,7 @@ public class PlanAdapter extends BaseRvAdaper<Plan> {
         holder.tv_date.setText(bean.getStartDate() + "-" + bean.getEndDate() );
         holder.tv_planDays.setText(bean.getPlanDays()+"");
         holder.tv_planContent.setText(bean.getPlanContent());
+        holder.tv_planStatus.setText(CheckUtil.isBigger(TimeUtil.getNowDate(),bean.getEndDate())?"已结束":"进行中");
     }
 
 

@@ -5,8 +5,39 @@
               android:orientation="vertical">
 
     <TextView
+        android:id="@+id/tv_totlePlanCount"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="personal"/>
+        android:text="总计划数：10"/>
+
+    <TextView
+        android:id="@+id/tv_actionPlanCount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="进行中计划数：10"/>
+
+    <TextView
+        android:id="@+id/tv_sequenceFinishedPlanCount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="连击完成计划数：10"/>
+
+    <TextView
+        android:id="@+id/tv_finishedDaysCount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="完成天数：10"/>
+
+    <TextView
+        android:id="@+id/tv_sequenceFinishedPlanRate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="连击完成率：10"/>
+
+    <TextView
+        android:id="@+id/tv_planFinishedRate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="计划完成率：10"/>
 
 </LinearLayout>

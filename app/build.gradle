@@ -2,9 +2,10 @@ apply plugin: 'com.android.application'
 apply plugin: 'org.greenrobot.greendao' // apply greenrobot plugin
 
 android {
-    compileSdkVersion rootProject.ext.compileSdkVersion
-    buildToolsVersion rootProject.ext.buildToolsVersion
+    compileSdkVersion rootProject.ext.compileSdkVersion//必须
+    buildToolsVersion rootProject.ext.buildToolsVersion//必须
     defaultConfig {
+        //会重写AndroidManifest.xml里的属性
         applicationId "com.kingja.trainingday"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
@@ -13,6 +14,7 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
+        //如何构建不同版本的app
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
@@ -53,7 +55,7 @@ dependencies {
     compile 'com.jakewharton:butterknife:8.6.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.6.0'
     /*module*/
-    compile project(':lib-res')
     compile project(':rxbus2')
     compile project(':recyclerviewhelper')
 }
+

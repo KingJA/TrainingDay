@@ -7,8 +7,10 @@
     <color name="k_black">#000000</color>
     <color name="k_yellow">#aec23d</color>
     <color name="k_yellow_light">#eff9b6</color>
+    <color name="k_green_light">#6dc483</color>
     <color name="k_transparent">#00ffffff</color>
     <color name="k_white">#ffffff</color>
+    <color name="k_grey_light">#f4f4f4</color>
     <color name="k_grey">#bebebe</color>
     <color name="k_half_grey">#33bebebe</color>
     <color name="k_red">#800000</color>
