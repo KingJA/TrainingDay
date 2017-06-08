@@ -1,6 +1,15 @@
 package com.kingja.trainingday.activity;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.view.View;
+import android.view.ViewAnimationUtils;
+import android.view.ViewTreeObserver;
+import android.view.animation.AccelerateInterpolator;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -34,6 +43,40 @@ public class AddPlanActivity extends BaseTitleActivity implements BaseTitleActiv
     private TextView mTvDays;
     private EditText mEtGift;
 
+    public static final String EXTRA_CIRCULAR_REVEAL_X = "EXTRA_CIRCULAR_REVEAL_X";
+    public static final String EXTRA_CIRCULAR_REVEAL_Y = "EXTRA_CIRCULAR_REVEAL_Y";
+
+
+    private int revealX;
+    private int revealY;
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        final Intent intent = getIntent();
+        if (savedInstanceState == null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP &&
+                intent.hasExtra(EXTRA_CIRCULAR_REVEAL_X) &&
+                intent.hasExtra(EXTRA_CIRCULAR_REVEAL_Y)) {
+            llRootView.setVisibility(View.INVISIBLE);
+            revealX = intent.getIntExtra(EXTRA_CIRCULAR_REVEAL_X, 0);
+            revealY = intent.getIntExtra(EXTRA_CIRCULAR_REVEAL_Y, 0);
+
+
+            ViewTreeObserver viewTreeObserver = llRootView.getViewTreeObserver();
+            if (viewTreeObserver.isAlive()) {
+                viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                    @Override
+                    public void onGlobalLayout() {
+                        revealActivity(revealX, revealY);
+                        llRootView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    }
+                });
+            }
+
+        } else {
+            llRootView.setVisibility(View.VISIBLE);
+        }
+    }
 
     @Override
     public void initVariable() {
@@ -110,5 +153,50 @@ public class AddPlanActivity extends BaseTitleActivity implements BaseTitleActiv
         RxBus.getDefault().post(new RefreshEvent());
         finish();
         ToastUtil.showToast("发布成功");
+    }
+
+    protected void revealActivity(int x, int y) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            float finalRadius = (float) (Math.max(llRootView.getWidth(), llRootView.getHeight()) * 1.1);
+
+            // create the animator for this view (the start radius is zero)
+            Animator circularReveal = ViewAnimationUtils.createCircularReveal(llRootView, x, y, 0, finalRadius);
+            circularReveal.setDuration(800);
+            circularReveal.setInterpolator(new AccelerateInterpolator());
+
+            // make the view visible and start the animation
+            llRootView.setVisibility(View.VISIBLE);
+            circularReveal.start();
+        } else {
+            finish();
+        }
+    }
+
+    protected void unRevealActivity() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            finish();
+        } else {
+            float finalRadius = (float) (Math.max(llRootView.getWidth(), llRootView.getHeight()) * 1.1);
+            Animator circularReveal = ViewAnimationUtils.createCircularReveal(
+                    llRootView, revealX, revealY, finalRadius, 0);
+
+            circularReveal.setDuration(400);
+            circularReveal.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    llRootView.setVisibility(View.INVISIBLE);
+                    finish();
+                }
+            });
+
+
+            circularReveal.start();
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        unRevealActivity();
     }
 }

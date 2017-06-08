@@ -27,6 +27,8 @@ public abstract class BaseTitleActivity extends BaseActivity {
     FrameLayout flContent;
     @BindView(R.id.tv_right)
     TextView tvRight;
+    @BindView(R.id.ll_rootView)
+    protected LinearLayout llRootView;
 
 
     @Override
@@ -66,6 +68,7 @@ public abstract class BaseTitleActivity extends BaseActivity {
             }
         });
     }
+
 
     public interface OnRightClickListener {
         void onRightClick();

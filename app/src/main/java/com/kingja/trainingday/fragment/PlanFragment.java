@@ -1,5 +1,8 @@
 package com.kingja.trainingday.fragment;
 
+import android.content.Intent;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -54,7 +57,7 @@ public class PlanFragment extends BaseFragment {
     protected void initViewAndListener() {
         planAdapter = new PlanAdapter(getActivity(), plans);
         planAdapter.setOnItemClickListener((plan, position) -> {
-            PlanDetailActivity.goActivity(getActivity(),plan,position);
+            PlanDetailActivity.goActivity(getActivity(), plan, position);
         });
         new RecyclerViewHelper.Builder(getActivity())
                 .setAdapter(planAdapter)
@@ -68,7 +71,6 @@ public class PlanFragment extends BaseFragment {
     protected void initNet() {
 
 
-
     }
 
     @Override
@@ -77,13 +79,29 @@ public class PlanFragment extends BaseFragment {
     }
 
     @OnClick({R.id.aiv_add_plan})
-    public void addPlan() {
-        GoUtil.goActivity(getActivity(), AddPlanActivity.class);
+    public void addPlan(View view) {
+//        GoUtil.goActivity(getActivity(), AddPlanActivity.class);
+
+        presentActivity(view);
+
+    }
+
+    public void presentActivity(View view) {
+        ActivityOptionsCompat options = ActivityOptionsCompat.
+                makeSceneTransitionAnimation(getActivity(), view, "transition");
+        int revealX = (int) (view.getX() + view.getWidth() / 2);
+        int revealY = (int) (view.getY() + view.getHeight() / 2);
+
+        Intent intent = new Intent(getActivity(), AddPlanActivity.class);
+        intent.putExtra(AddPlanActivity.EXTRA_CIRCULAR_REVEAL_X, revealX);
+        intent.putExtra(AddPlanActivity.EXTRA_CIRCULAR_REVEAL_Y, revealY);
+
+        ActivityCompat.startActivity(getActivity(), intent, options.toBundle());
     }
 
     @Subscribe
     public void reFreshPlans(RefreshEvent event) {
-      plans = DBManager.getInstance().getPlans();
+        plans = DBManager.getInstance().getPlans();
         planAdapter.setData(plans);
     }
 

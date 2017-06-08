@@ -17,7 +17,7 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".activity.AddPlanActivity"/>
+        <activity android:name=".activity.AddPlanActivity"  android:theme="@style/AppTheme.Transparent"/>
         <activity android:name=".activity.PlanDetailActivity"/>
     </application>
 
