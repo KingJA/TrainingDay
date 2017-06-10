@@ -2,15 +2,24 @@ package com.kingja.trainingday.activity;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewAnimationUtils;
+import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateInterpolator;
+import android.view.animation.AnimationSet;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.kingja.rxbus2.RxBus;
@@ -49,6 +58,10 @@ public class AddPlanActivity extends BaseTitleActivity implements BaseTitleActiv
 
     private int revealX;
     private int revealY;
+    private LinearLayout mLlRemindTime;
+    private LinearLayout mLlRemindType;
+    private int mRemindTypeHeight;
+    private ViewGroup.LayoutParams layoutParams;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -104,6 +117,8 @@ public class AddPlanActivity extends BaseTitleActivity implements BaseTitleActiv
         mTvStartDate = (TextView) findViewById(R.id.tv_startDate);
         mTvDays = (TextView) findViewById(R.id.tv_days);
         mEtGift = (EditText) findViewById(R.id.et_gift);
+        mLlRemindTime = (LinearLayout) findViewById(R.id.ll_remindTime);
+        mLlRemindType = (LinearLayout) findViewById(R.id.ll_remindType);
     }
 
     @Override
@@ -114,6 +129,12 @@ public class AddPlanActivity extends BaseTitleActivity implements BaseTitleActiv
     @Override
     protected void initData() {
         setOnRightClick("发布", this);
+        mLlRemindTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showRemindType();
+            }
+        });
     }
 
     @Override
@@ -198,5 +219,41 @@ public class AddPlanActivity extends BaseTitleActivity implements BaseTitleActiv
     public void onBackPressed() {
         super.onBackPressed();
         unRevealActivity();
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        Log.e(TAG, "onWindowFocusChanged getHeight: " + mLlRemindTime.getHeight());
+        mRemindTypeHeight = mLlRemindType.getHeight();
+        layoutParams = mLlRemindType.getLayoutParams();
+        layoutParams.height=0;
+        mLlRemindType.setLayoutParams(layoutParams);
+        mLlRemindType.setVisibility(View.GONE);
+    }
+
+    private void showRemindType() {
+        mLlRemindType.setVisibility(View.VISIBLE);
+        mLlRemindType.setPivotX(0);
+        mLlRemindType.setPivotY(0);
+        ObjectAnimator alphaAnimator = ObjectAnimator.ofFloat(mLlRemindType, View.ALPHA, 0.2f, 1f);
+        ObjectAnimator scaleXAnimator = ObjectAnimator.ofFloat(mLlRemindType, View.SCALE_X, 0.0f, 1f);
+        ObjectAnimator scaleYAnimator = ObjectAnimator.ofFloat(mLlRemindType, View.SCALE_Y, 0.0f, 1f);
+        ValueAnimator heightAnimator = ValueAnimator.ofInt(mRemindTypeHeight);
+        heightAnimator.addUpdateListener(animation -> {
+            int currentValue = (int) animation.getAnimatedValue();
+            Log.e(TAG, "currentValue: "+currentValue );
+            layoutParams = mLlRemindType.getLayoutParams();
+            layoutParams.height=currentValue;
+            mLlRemindType.setLayoutParams(layoutParams);
+
+        });
+        AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.playTogether(alphaAnimator, scaleXAnimator, scaleYAnimator,heightAnimator);
+        animatorSet.setDuration(500);
+        animatorSet.start();
+    }
+
+    private void showDialog() {
     }
 }
