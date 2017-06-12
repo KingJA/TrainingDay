@@ -82,7 +82,7 @@ public class DBManager implements IDbOperator {
     }
 
     @Override
-    public void removePlanDay(String id) {
+    public void removePlanDay(long id) {
         PlanDayDao planDao = getPlanDayDao();
         planDao.deleteByKey(id);
     }

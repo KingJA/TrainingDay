@@ -2,11 +2,9 @@ package com.kingja.trainingday.activity;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.animation.AnimatorSet;
-import android.animation.ObjectAnimator;
-import android.animation.ValueAnimator;
-import android.app.AlertDialog;
-import android.app.Dialog;
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -17,7 +15,7 @@ import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateInterpolator;
-import android.view.animation.AnimationSet;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -30,15 +28,15 @@ import com.kingja.trainingday.event.RefreshEvent;
 import com.kingja.trainingday.greendaobean.Plan;
 import com.kingja.trainingday.greendaobean.PlanDay;
 import com.kingja.trainingday.inject.commonent.AppComponent;
+import com.kingja.trainingday.service.AlarmService;
+import com.kingja.trainingday.util.AlarmUtil;
 import com.kingja.trainingday.util.CheckUtil;
 import com.kingja.trainingday.util.StringUtil;
 import com.kingja.trainingday.util.TimeUtil;
 import com.kingja.trainingday.util.ToastUtil;
 
+import java.util.Calendar;
 import java.util.List;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 /**
  * Description:TODO
@@ -46,10 +44,11 @@ import butterknife.ButterKnife;
  * Author:KingJA
  * Email:kingjavip@gmail.com
  */
-public class AddPlanActivity extends BaseTitleActivity implements BaseTitleActivity.OnRightClickListener {
+public class AddPlanActivity extends BaseTitleActivity implements View.OnClickListener, BaseTitleActivity
+        .OnRightClickListener {
     private EditText mEtPlanContent;
     private TextView mTvStartDate;
-    private TextView mTvDays;
+    private TextView mTvPlanDays;
     private EditText mEtGift;
 
     public static final String EXTRA_CIRCULAR_REVEAL_X = "EXTRA_CIRCULAR_REVEAL_X";
@@ -62,6 +61,15 @@ public class AddPlanActivity extends BaseTitleActivity implements BaseTitleActiv
     private LinearLayout mLlRemindType;
     private int mRemindTypeHeight;
     private ViewGroup.LayoutParams layoutParams;
+    private TimePickerDialog mTimePickerDialog;
+    private TextView mTvRemindTime;
+    private TextView mTvRemindType;
+    private String mRemindTime;
+    private LinearLayout mLlStartDate;
+    private int selectedYear;
+    private int selectedMonth;
+    private int selectedDay;
+    private LinearLayout mLlPlanDays;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -93,7 +101,10 @@ public class AddPlanActivity extends BaseTitleActivity implements BaseTitleActiv
 
     @Override
     public void initVariable() {
-
+        Calendar mCalendar = Calendar.getInstance();
+        selectedYear = mCalendar.get(Calendar.YEAR);
+        selectedMonth = mCalendar.get(Calendar.MONTH);
+        selectedDay = mCalendar.get(Calendar.DAY_OF_MONTH);
     }
 
     @Override
@@ -114,34 +125,106 @@ public class AddPlanActivity extends BaseTitleActivity implements BaseTitleActiv
     @Override
     protected void initView() {
         mEtPlanContent = (EditText) findViewById(R.id.et_planContent);
+        mTvRemindTime = (TextView) findViewById(R.id.tv_remindTime);
+        mTvRemindType = (TextView) findViewById(R.id.tv_remindType);
         mTvStartDate = (TextView) findViewById(R.id.tv_startDate);
-        mTvDays = (TextView) findViewById(R.id.tv_days);
+        mTvPlanDays = (TextView) findViewById(R.id.tv_planDays);
         mEtGift = (EditText) findViewById(R.id.et_gift);
         mLlRemindTime = (LinearLayout) findViewById(R.id.ll_remindTime);
         mLlRemindType = (LinearLayout) findViewById(R.id.ll_remindType);
+        mLlStartDate = (LinearLayout) findViewById(R.id.ll_startDate);
+        mLlPlanDays = (LinearLayout) findViewById(R.id.ll_planDays);
     }
+
+    private void showTimePickerDialog() {
+        mTimePickerDialog = new TimePickerDialog(this,
+                (TimePickerDialog.OnTimeSetListener) (view, hourOfDay, minute) -> {
+                    String mSelectedHour = String.format("%02d", hourOfDay);
+                    String mSelectMinute = String.format("%02d", minute);
+                    currentHour = hourOfDay;
+                    currentMinute = minute;
+                    mRemindTime = mSelectedHour + ":" + mSelectMinute;
+                    mTvRemindTime.setText(mRemindTime);
+                }, currentHour, currentMinute, true);
+        mTimePickerDialog.show();
+    }
+
+    private void showDatePickerDialog() {
+        new DatePickerDialog(this,
+                // 绑定监听器
+                new DatePickerDialog.OnDateSetListener() {
+
+                    @Override
+                    public void onDateSet(DatePicker view, int year,
+                                          int monthOfYear, int dayOfMonth) {
+                        selectedYear = year;
+                        selectedMonth = monthOfYear + 1;
+                        selectedDay = dayOfMonth;
+                        mTvStartDate.setText(year + "/" + String.format("%02d", monthOfYear + 1) + "/" + String
+                                .format("%02d", dayOfMonth));
+                    }
+                }
+                , selectedYear, selectedMonth, selectedDay).show();
+    }
+
+
+    private void showRemindTypeDialog() {
+        android.support.v7.app.AlertDialog.Builder b = new android.support.v7.app.AlertDialog.Builder(this);
+        b.setTitle("提醒方式");
+        b.setSingleChoiceItems(remindTypes, currentRemindType, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                currentRemindType = which;
+                mTvRemindType.setText(remindTypes[which]);
+                dialog.dismiss();
+            }
+        });
+        b.show();
+    }
+
+    private void showPlanDaysDialog() {
+        android.support.v7.app.AlertDialog.Builder b = new android.support.v7.app.AlertDialog.Builder(this);
+        b.setTitle("计划天数");
+        b.setSingleChoiceItems(planDays, currentPlanDays, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                currentPlanDays = which;
+                mTvPlanDays.setText(planDays[which]);
+                dialog.dismiss();
+            }
+        });
+        b.show();
+    }
+
+    private String[] remindTypes = {"铃声", "振动", "铃声+振动"};
+    private String[] planDays = {"7", "15", "30"};
+
+    private int currentHour = 20;
+    private int currentMinute = 0;
+    private int currentRemindType = 0;
+    private int currentPlanDays = 0;
 
     @Override
     protected void initNet() {
 
     }
 
+
     @Override
     protected void initData() {
         setOnRightClick("发布", this);
-        mLlRemindTime.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showRemindType();
-            }
-        });
+        mLlStartDate.setOnClickListener(this);
+        mLlRemindTime.setOnClickListener(this);
+        mLlRemindType.setOnClickListener(this);
+        mLlPlanDays.setOnClickListener(this);
     }
+
 
     @Override
     public void onRightClick() {
         String planContent = mEtPlanContent.getText().toString().trim();
         String startDate = mTvStartDate.getText().toString().trim();
-        int days = Integer.valueOf(mTvDays.getText().toString().trim());
+        int days = Integer.valueOf(mTvPlanDays.getText().toString().trim());
         String gift = mEtGift.getText().toString().trim();
         if (CheckUtil.checkEmpty(planContent, "请输入计划事项") &&
                 CheckUtil.checkEmpty(startDate, "请选择开始时间")) {
@@ -151,6 +234,7 @@ public class AddPlanActivity extends BaseTitleActivity implements BaseTitleActiv
     }
 
     private void publishPlan(String planContent, String startDate, int days, String gift) {
+        Log.e(TAG, "publishPlan: ");
         Plan plan = new Plan();
         String planId = StringUtil.getUUID();
         plan.setPlanId(planId);
@@ -166,9 +250,15 @@ public class AddPlanActivity extends BaseTitleActivity implements BaseTitleActiv
         for (String date : dates) {
             PlanDay planDay = new PlanDay();
             planDay.setDate(date);
-            planDay.setDayId(StringUtil.getUUID());
+            planDay.setRemindType(currentRemindType);
+            planDay.setRemindTime(date + " " + mRemindTime + ":00");
+            planDay.setRingName("天空之城");
             planDay.setPlanId(planId);
+            long milliseconds = TimeUtil.getMilliseconds(date + " " + mRemindTime + ":00");
+            planDay.setDayId(milliseconds);
             DBManager.getInstance().addPlanDay(planDay);
+
+            AlarmUtil.setAlarm(planDay,AlarmService.class);
         }
 
         RxBus.getDefault().post(new RefreshEvent());
@@ -224,36 +314,25 @@ public class AddPlanActivity extends BaseTitleActivity implements BaseTitleActiv
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
-        Log.e(TAG, "onWindowFocusChanged getHeight: " + mLlRemindTime.getHeight());
-        mRemindTypeHeight = mLlRemindType.getHeight();
-        layoutParams = mLlRemindType.getLayoutParams();
-        layoutParams.height=0;
-        mLlRemindType.setLayoutParams(layoutParams);
-        mLlRemindType.setVisibility(View.GONE);
     }
 
-    private void showRemindType() {
-        mLlRemindType.setVisibility(View.VISIBLE);
-        mLlRemindType.setPivotX(0);
-        mLlRemindType.setPivotY(0);
-        ObjectAnimator alphaAnimator = ObjectAnimator.ofFloat(mLlRemindType, View.ALPHA, 0.2f, 1f);
-        ObjectAnimator scaleXAnimator = ObjectAnimator.ofFloat(mLlRemindType, View.SCALE_X, 0.0f, 1f);
-        ObjectAnimator scaleYAnimator = ObjectAnimator.ofFloat(mLlRemindType, View.SCALE_Y, 0.0f, 1f);
-        ValueAnimator heightAnimator = ValueAnimator.ofInt(mRemindTypeHeight);
-        heightAnimator.addUpdateListener(animation -> {
-            int currentValue = (int) animation.getAnimatedValue();
-            Log.e(TAG, "currentValue: "+currentValue );
-            layoutParams = mLlRemindType.getLayoutParams();
-            layoutParams.height=currentValue;
-            mLlRemindType.setLayoutParams(layoutParams);
 
-        });
-        AnimatorSet animatorSet = new AnimatorSet();
-        animatorSet.playTogether(alphaAnimator, scaleXAnimator, scaleYAnimator,heightAnimator);
-        animatorSet.setDuration(500);
-        animatorSet.start();
-    }
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.ll_startDate:
+                showDatePickerDialog();
+                break;
+            case R.id.ll_remindTime:
+                showTimePickerDialog();
+                break;
+            case R.id.ll_remindType:
+                showRemindTypeDialog();
+                break;
+            case R.id.ll_planDays:
+                showPlanDaysDialog();
+                break;
 
-    private void showDialog() {
+        }
     }
 }

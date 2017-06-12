@@ -75,11 +75,11 @@ public class TimeUtil {
 
 
     /*Data*/
-    public static List<String> getTestDates(int days,int before) {
+    public static List<String> getTestDates(int days, int before) {
         List<String> dates = new ArrayList<>();
         SimpleDateFormat fromFormat = new SimpleDateFormat("yyyy/MM/dd");
         Calendar selectedDate = Calendar.getInstance();
-        selectedDate.add(Calendar.DAY_OF_MONTH,-before);
+        selectedDate.add(Calendar.DAY_OF_MONTH, -before);
         for (int i = 0; i < days; i++) {
             selectedDate.add(Calendar.DAY_OF_MONTH, i == 0 ? 0 : 1);
             String date = fromFormat.format(selectedDate.getTime());
@@ -88,4 +88,19 @@ public class TimeUtil {
         return dates;
     }
 
+    public static long getMilliseconds(String time) {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        long milliseconds = 0;
+        try {
+            Date date = format.parse(time);
+            milliseconds = date.getTime();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return milliseconds;
+    }
+
+    public static boolean availableAlarm(String alarmTime) {
+        return alarmTime.compareTo(getNowTime())>0;
+    }
 }

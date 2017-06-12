@@ -15,7 +15,7 @@ import com.kingja.trainingday.greendaobean.PlanDay;
 /** 
  * DAO for table "PLAN_DAY".
 */
-public class PlanDayDao extends AbstractDao<PlanDay, String> {
+public class PlanDayDao extends AbstractDao<PlanDay, Long> {
 
     public static final String TABLENAME = "PLAN_DAY";
 
@@ -24,10 +24,13 @@ public class PlanDayDao extends AbstractDao<PlanDay, String> {
      * Can be used for QueryBuilder and for referencing column names.
      */
     public static class Properties {
-        public final static Property DayId = new Property(0, String.class, "dayId", true, "DAY_ID");
+        public final static Property DayId = new Property(0, Long.class, "dayId", true, "_id");
         public final static Property PlanId = new Property(1, String.class, "planId", false, "PLAN_ID");
         public final static Property Date = new Property(2, String.class, "date", false, "DATE");
         public final static Property Status = new Property(3, int.class, "status", false, "STATUS");
+        public final static Property RemindType = new Property(4, int.class, "remindType", false, "REMIND_TYPE");
+        public final static Property RemindTime = new Property(5, String.class, "remindTime", false, "REMIND_TIME");
+        public final static Property RingName = new Property(6, String.class, "ringName", false, "RING_NAME");
     }
 
 
@@ -43,10 +46,13 @@ public class PlanDayDao extends AbstractDao<PlanDay, String> {
     public static void createTable(Database db, boolean ifNotExists) {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"PLAN_DAY\" (" + //
-                "\"DAY_ID\" TEXT PRIMARY KEY NOT NULL ," + // 0: dayId
+                "\"_id\" INTEGER PRIMARY KEY AUTOINCREMENT ," + // 0: dayId
                 "\"PLAN_ID\" TEXT," + // 1: planId
                 "\"DATE\" TEXT," + // 2: date
-                "\"STATUS\" INTEGER NOT NULL );"); // 3: status
+                "\"STATUS\" INTEGER NOT NULL ," + // 3: status
+                "\"REMIND_TYPE\" INTEGER NOT NULL ," + // 4: remindType
+                "\"REMIND_TIME\" TEXT," + // 5: remindTime
+                "\"RING_NAME\" TEXT);"); // 6: ringName
     }
 
     /** Drops the underlying database table. */
@@ -59,9 +65,9 @@ public class PlanDayDao extends AbstractDao<PlanDay, String> {
     protected final void bindValues(DatabaseStatement stmt, PlanDay entity) {
         stmt.clearBindings();
  
-        String dayId = entity.getDayId();
+        Long dayId = entity.getDayId();
         if (dayId != null) {
-            stmt.bindString(1, dayId);
+            stmt.bindLong(1, dayId);
         }
  
         String planId = entity.getPlanId();
@@ -74,15 +80,26 @@ public class PlanDayDao extends AbstractDao<PlanDay, String> {
             stmt.bindString(3, date);
         }
         stmt.bindLong(4, entity.getStatus());
+        stmt.bindLong(5, entity.getRemindType());
+ 
+        String remindTime = entity.getRemindTime();
+        if (remindTime != null) {
+            stmt.bindString(6, remindTime);
+        }
+ 
+        String ringName = entity.getRingName();
+        if (ringName != null) {
+            stmt.bindString(7, ringName);
+        }
     }
 
     @Override
     protected final void bindValues(SQLiteStatement stmt, PlanDay entity) {
         stmt.clearBindings();
  
-        String dayId = entity.getDayId();
+        Long dayId = entity.getDayId();
         if (dayId != null) {
-            stmt.bindString(1, dayId);
+            stmt.bindLong(1, dayId);
         }
  
         String planId = entity.getPlanId();
@@ -95,39 +112,57 @@ public class PlanDayDao extends AbstractDao<PlanDay, String> {
             stmt.bindString(3, date);
         }
         stmt.bindLong(4, entity.getStatus());
+        stmt.bindLong(5, entity.getRemindType());
+ 
+        String remindTime = entity.getRemindTime();
+        if (remindTime != null) {
+            stmt.bindString(6, remindTime);
+        }
+ 
+        String ringName = entity.getRingName();
+        if (ringName != null) {
+            stmt.bindString(7, ringName);
+        }
     }
 
     @Override
-    public String readKey(Cursor cursor, int offset) {
-        return cursor.isNull(offset + 0) ? null : cursor.getString(offset + 0);
+    public Long readKey(Cursor cursor, int offset) {
+        return cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0);
     }    
 
     @Override
     public PlanDay readEntity(Cursor cursor, int offset) {
         PlanDay entity = new PlanDay( //
-            cursor.isNull(offset + 0) ? null : cursor.getString(offset + 0), // dayId
+            cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // dayId
             cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // planId
             cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // date
-            cursor.getInt(offset + 3) // status
+            cursor.getInt(offset + 3), // status
+            cursor.getInt(offset + 4), // remindType
+            cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // remindTime
+            cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6) // ringName
         );
         return entity;
     }
      
     @Override
     public void readEntity(Cursor cursor, PlanDay entity, int offset) {
-        entity.setDayId(cursor.isNull(offset + 0) ? null : cursor.getString(offset + 0));
+        entity.setDayId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
         entity.setPlanId(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
         entity.setDate(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
         entity.setStatus(cursor.getInt(offset + 3));
+        entity.setRemindType(cursor.getInt(offset + 4));
+        entity.setRemindTime(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
+        entity.setRingName(cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6));
      }
     
     @Override
-    protected final String updateKeyAfterInsert(PlanDay entity, long rowId) {
-        return entity.getDayId();
+    protected final Long updateKeyAfterInsert(PlanDay entity, long rowId) {
+        entity.setDayId(rowId);
+        return rowId;
     }
     
     @Override
-    public String getKey(PlanDay entity) {
+    public Long getKey(PlanDay entity) {
         if(entity != null) {
             return entity.getDayId();
         } else {

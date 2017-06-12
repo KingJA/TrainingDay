@@ -43,7 +43,7 @@ public class App extends Application {
         LeakCanary.install(this);
         this.sInstance = this;
         setupComponent();
-        initTestData();
+//        initTestData();
     }
 
     private void initTestData() {

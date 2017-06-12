@@ -32,7 +32,6 @@ public class TestDataProvider {
         for (int i = 0; i < dates.size(); i++) {
             PlanDay planDay = new PlanDay();
             planDay.setDate(dates.get(i));
-            planDay.setDayId(StringUtil.getUUID());
             planDay.setPlanId(planId);
 
             if (i == 0 || i == 3) {
@@ -60,7 +59,6 @@ public class TestDataProvider {
         for (int i = 0; i < dates.size(); i++) {
             PlanDay planDay = new PlanDay();
             planDay.setDate(dates.get(i));
-            planDay.setDayId(StringUtil.getUUID());
             planDay.setPlanId(planId);
             planDay.setStatus(finished);
             DBManager.getInstance().addPlanDay(planDay);

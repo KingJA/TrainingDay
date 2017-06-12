@@ -18,7 +18,7 @@ public interface IDbOperator {
 
     void removePlan(String id);
 
-    void removePlanDay(String id);
+    void removePlanDay(long id);
 
     void getPlans(PlanDay planDay);
 
