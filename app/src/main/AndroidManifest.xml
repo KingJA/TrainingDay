@@ -6,7 +6,7 @@
 
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <uses-permission android:name="android.permission.DISABLE_KEYGUARD"/>
-
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <application
         android:name=".base.App"
         android:allowBackup="true"
@@ -29,10 +29,23 @@
         <activity android:name=".activity.RingActivity"/>
         <activity
             android:name=".activity.WakeUpActivity"
-            android:launchMode="singleTask"
-            android:theme="@style/AppTheme.FullScreen"/>
+            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"/>
 
+        <service android:name=".service.InitializeService"/>
         <service android:name=".service.AlarmService"/>
+
+        <receiver android:name=".receiver.AlarmClockBroadcast"/>
+        <receiver android:name=".receiver.BootReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
+            <intent-filter >
+                <action android:name="android.intent.action.MEDIA_MOUNTED" />
+                <action android:name="android.intent.action.MEDIA_UNMOUNTED" />
+                <data android:scheme="file" >
+                </data>
+            </intent-filter>
+        </receiver>
     </application>
 
 

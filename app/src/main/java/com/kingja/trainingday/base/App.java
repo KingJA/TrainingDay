@@ -1,7 +1,10 @@
 package com.kingja.trainingday.base;
 
 import android.app.Application;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.SystemClock;
+import android.util.Log;
 
 import com.kingja.trainingday.dao.DBManager;
 import com.kingja.trainingday.greendaobean.Plan;
@@ -9,6 +12,7 @@ import com.kingja.trainingday.greendaobean.PlanDay;
 import com.kingja.trainingday.inject.commonent.AppComponent;
 import com.kingja.trainingday.inject.commonent.DaggerAppComponent;
 import com.kingja.trainingday.inject.module.AppModule;
+import com.kingja.trainingday.service.InitializeService;
 import com.kingja.trainingday.util.StringUtil;
 import com.kingja.trainingday.util.TestDataProvider;
 import com.kingja.trainingday.util.TimeUtil;
@@ -27,6 +31,7 @@ import java.util.List;
  * 2.对外提供方法获取AppComponent
  */
 public class App extends Application {
+    private static final String TAG = "App";
     private static App sInstance;
     private AppComponent appComponent;
     private static SharedPreferences mSharedPreferences;
@@ -35,13 +40,14 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        startService(new Intent(this, InitializeService.class));
         if (LeakCanary.isInAnalyzerProcess(this)) {
             // This process is dedicated to LeakCanary for heap analysis.
             // You should not init your app in this process.
             return;
         }
         LeakCanary.install(this);
-        this.sInstance = this;
+        sInstance = this;
         setupComponent();
 //        initTestData();
     }

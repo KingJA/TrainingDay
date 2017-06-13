@@ -6,12 +6,17 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.Window;
+import android.view.View;
 import android.view.WindowManager;
 
 import com.kingja.trainingday.R;
+import com.kingja.trainingday.greendaobean.PlanClock;
+import com.kingja.trainingday.util.AlarmPlayer;
+import com.kingja.trainingday.util.AlarmUtil;
+import com.kingja.trainingday.util.IntentUtil;
+
+import java.io.Serializable;
 
 /**
  * Description:TODO
@@ -22,38 +27,32 @@ import com.kingja.trainingday.R;
 public class WakeUpActivity extends Activity {
 
     private PowerManager.WakeLock mWakelock;
+    private PlanClock planClock;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        Log.e("WakeUpActivity", "onCreate: ");
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_wakeup);
+
+       planClock = IntentUtil.getData(getIntent(), PlanClock.class);
+
+        Log.e("WakeUpActivity", "planClock2: " + planClock.getRemindTime());
         getWindow().addFlags(
-                WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
-                        | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON
+                WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |               //这个在锁屏状态下
+                        WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON
                         | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD
                         | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        setContentView(R.layout.activity_wakeup);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Log.e("WakeUpActivity", "isLocked: "+isLocked() );
-        PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-        mWakelock = pm.newWakeLock(PowerManager.ACQUIRE_CAUSES_WAKEUP | PowerManager.SCREEN_DIM_WAKE_LOCK,
-                "SimpleTimer");
-        mWakelock.acquire();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        mWakelock.release();
-    }
 
     private boolean isLocked() {
         KeyguardManager km =
                 (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
         return km.inKeyguardRestrictedInputMode();
+    }
+
+    public void onCloseClock(View view) {
+        AlarmPlayer.getInstance(this).stop();
+        finish();
     }
 }

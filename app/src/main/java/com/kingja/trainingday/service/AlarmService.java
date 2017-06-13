@@ -1,22 +1,17 @@
 package com.kingja.trainingday.service;
 
-import android.app.Service;
+import android.app.IntentService;
 import android.content.Intent;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
-import android.media.SoundPool;
-import android.os.Binder;
 import android.os.IBinder;
-import android.os.Vibrator;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.kingja.trainingday.R;
 import com.kingja.trainingday.activity.WakeUpActivity;
-import com.kingja.trainingday.greendaobean.PlanDay;
-import com.kingja.trainingday.util.VibratorUtil;
-
-import java.io.Serializable;
+import com.kingja.trainingday.greendaobean.PlanClock;
+import com.kingja.trainingday.receiver.AlarmClockBroadcast;
+import com.kingja.trainingday.util.AlarmPlayer;
+import com.kingja.trainingday.util.IntentUtil;
 
 /**
  * Description:TODO
@@ -24,46 +19,27 @@ import java.io.Serializable;
  * Author:KingJA
  * Email:kingjavip@gmail.com
  */
-public class AlarmService extends Service {
+public class AlarmService extends IntentService {
 
-    private SoundPool soundPool;
-    private Vibrator vibrator;
-    private MediaPlayer mMediaPlayer = new MediaPlayer();
+    public AlarmService() {
+        super("AlarmService");
+    }
+
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        return mBinder;
+        return null;
     }
 
     @Override
-    public void onCreate() {
-        super.onCreate();
+    protected void onHandleIntent(@Nullable Intent intent) {
+        PlanClock planClock = IntentUtil.getData(intent, PlanClock.class);
+        //播放闹钟
+        AlarmPlayer.getInstance(getBaseContext()).playRaw(R.raw.classics, true);
+        //打开提示Activity
+        IntentUtil.goActivityInService(getBaseContext(), WakeUpActivity.class, planClock);
+        //释放唤起锁
+        AlarmClockBroadcast.completeWakefulIntent(intent);
     }
 
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        PlanDay planDay = (PlanDay) intent.getSerializableExtra("PLAN_DAY");
-        Log.e("AlarmService", "planDay: " + planDay.getRemindTime());
-        vibrator = VibratorUtil.vibrateRepeat(getApplicationContext());
-        mMediaPlayer = MediaPlayer.create(this, R.raw.classics);
-        mMediaPlayer.start();
-
-        Intent dialogIntent = new Intent(getBaseContext(), WakeUpActivity.class);
-        dialogIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        getApplication().startActivity(dialogIntent);
-        return super.onStartCommand(intent, flags, startId);
-    }
-
-    public void onDestroy() {
-        super.onDestroy();
-        if (vibrator != null) {
-            vibrator.cancel();
-        }
-    }
-
-    private Binder mBinder = new Binder();
-
-    class MusicBinder extends Binder {
-
-    }
 }

@@ -20,19 +20,12 @@ public class PlanDay implements Serializable{
     private String planId;
     private String date;
     private int status;
-    private int remindType;
-    private String remindTime;
-    private String ringName;
-    @Generated(hash = 1861607413)
-    public PlanDay(Long dayId, String planId, String date, int status,
-            int remindType, String remindTime, String ringName) {
+    @Generated(hash = 1672821741)
+    public PlanDay(Long dayId, String planId, String date, int status) {
         this.dayId = dayId;
         this.planId = planId;
         this.date = date;
         this.status = status;
-        this.remindType = remindType;
-        this.remindTime = remindTime;
-        this.ringName = ringName;
     }
     @Generated(hash = 1560388873)
     public PlanDay() {
@@ -61,24 +54,5 @@ public class PlanDay implements Serializable{
     public void setStatus(int status) {
         this.status = status;
     }
-    public int getRemindType() {
-        return this.remindType;
-    }
-    public void setRemindType(int remindType) {
-        this.remindType = remindType;
-    }
-    public String getRemindTime() {
-        return this.remindTime;
-    }
-    public void setRemindTime(String remindTime) {
-        this.remindTime = remindTime;
-    }
-    public String getRingName() {
-        return this.ringName;
-    }
-    public void setRingName(String ringName) {
-        this.ringName = ringName;
-    }
-
 
 }

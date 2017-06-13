@@ -26,6 +26,7 @@ import com.kingja.trainingday.base.BaseTitleActivity;
 import com.kingja.trainingday.dao.DBManager;
 import com.kingja.trainingday.event.RefreshEvent;
 import com.kingja.trainingday.greendaobean.Plan;
+import com.kingja.trainingday.greendaobean.PlanClock;
 import com.kingja.trainingday.greendaobean.PlanDay;
 import com.kingja.trainingday.inject.commonent.AppComponent;
 import com.kingja.trainingday.service.AlarmService;
@@ -209,7 +210,6 @@ public class AddPlanActivity extends BaseTitleActivity implements View.OnClickLi
 
     }
 
-
     @Override
     protected void initData() {
         setOnRightClick("发布", this);
@@ -248,17 +248,21 @@ public class AddPlanActivity extends BaseTitleActivity implements View.OnClickLi
 
         List<String> dates = TimeUtil.getDates(startDate, days);
         for (String date : dates) {
+            String remindTime = date + " " + mRemindTime + ":00";
+            long milliseconds = TimeUtil.getMilliseconds(remindTime);
             PlanDay planDay = new PlanDay();
             planDay.setDate(date);
-            planDay.setRemindType(currentRemindType);
-            planDay.setRemindTime(date + " " + mRemindTime + ":00");
-            planDay.setRingName("天空之城");
             planDay.setPlanId(planId);
-            long milliseconds = TimeUtil.getMilliseconds(date + " " + mRemindTime + ":00");
             planDay.setDayId(milliseconds);
             DBManager.getInstance().addPlanDay(planDay);
 
-            AlarmUtil.setAlarm(planDay,AlarmService.class);
+            PlanClock planClock = new PlanClock();
+            planClock.setClockId(milliseconds);
+            planClock.setRemindType(currentRemindType);
+            planClock.setRemindTime(remindTime);
+
+            AlarmUtil.setAlarm(planClock);
+            DBManager.getInstance().addPlanClock(planClock);
         }
 
         RxBus.getDefault().post(new RefreshEvent());
@@ -299,8 +303,6 @@ public class AddPlanActivity extends BaseTitleActivity implements View.OnClickLi
                     finish();
                 }
             });
-
-
             circularReveal.start();
         }
     }

@@ -28,9 +28,6 @@ public class PlanDayDao extends AbstractDao<PlanDay, Long> {
         public final static Property PlanId = new Property(1, String.class, "planId", false, "PLAN_ID");
         public final static Property Date = new Property(2, String.class, "date", false, "DATE");
         public final static Property Status = new Property(3, int.class, "status", false, "STATUS");
-        public final static Property RemindType = new Property(4, int.class, "remindType", false, "REMIND_TYPE");
-        public final static Property RemindTime = new Property(5, String.class, "remindTime", false, "REMIND_TIME");
-        public final static Property RingName = new Property(6, String.class, "ringName", false, "RING_NAME");
     }
 
 
@@ -49,10 +46,7 @@ public class PlanDayDao extends AbstractDao<PlanDay, Long> {
                 "\"_id\" INTEGER PRIMARY KEY AUTOINCREMENT ," + // 0: dayId
                 "\"PLAN_ID\" TEXT," + // 1: planId
                 "\"DATE\" TEXT," + // 2: date
-                "\"STATUS\" INTEGER NOT NULL ," + // 3: status
-                "\"REMIND_TYPE\" INTEGER NOT NULL ," + // 4: remindType
-                "\"REMIND_TIME\" TEXT," + // 5: remindTime
-                "\"RING_NAME\" TEXT);"); // 6: ringName
+                "\"STATUS\" INTEGER NOT NULL );"); // 3: status
     }
 
     /** Drops the underlying database table. */
@@ -80,17 +74,6 @@ public class PlanDayDao extends AbstractDao<PlanDay, Long> {
             stmt.bindString(3, date);
         }
         stmt.bindLong(4, entity.getStatus());
-        stmt.bindLong(5, entity.getRemindType());
- 
-        String remindTime = entity.getRemindTime();
-        if (remindTime != null) {
-            stmt.bindString(6, remindTime);
-        }
- 
-        String ringName = entity.getRingName();
-        if (ringName != null) {
-            stmt.bindString(7, ringName);
-        }
     }
 
     @Override
@@ -112,17 +95,6 @@ public class PlanDayDao extends AbstractDao<PlanDay, Long> {
             stmt.bindString(3, date);
         }
         stmt.bindLong(4, entity.getStatus());
-        stmt.bindLong(5, entity.getRemindType());
- 
-        String remindTime = entity.getRemindTime();
-        if (remindTime != null) {
-            stmt.bindString(6, remindTime);
-        }
- 
-        String ringName = entity.getRingName();
-        if (ringName != null) {
-            stmt.bindString(7, ringName);
-        }
     }
 
     @Override
@@ -136,10 +108,7 @@ public class PlanDayDao extends AbstractDao<PlanDay, Long> {
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // dayId
             cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // planId
             cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // date
-            cursor.getInt(offset + 3), // status
-            cursor.getInt(offset + 4), // remindType
-            cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // remindTime
-            cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6) // ringName
+            cursor.getInt(offset + 3) // status
         );
         return entity;
     }
@@ -150,9 +119,6 @@ public class PlanDayDao extends AbstractDao<PlanDay, Long> {
         entity.setPlanId(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
         entity.setDate(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
         entity.setStatus(cursor.getInt(offset + 3));
-        entity.setRemindType(cursor.getInt(offset + 4));
-        entity.setRemindTime(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
-        entity.setRingName(cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6));
      }
     
     @Override

@@ -6,9 +6,11 @@ import android.database.sqlite.SQLiteDatabase;
 import com.kingja.trainingday.base.App;
 import com.kingja.trainingday.greendao.DaoMaster;
 import com.kingja.trainingday.greendao.DaoSession;
+import com.kingja.trainingday.greendao.PlanClockDao;
 import com.kingja.trainingday.greendao.PlanDao;
 import com.kingja.trainingday.greendao.PlanDayDao;
 import com.kingja.trainingday.greendaobean.Plan;
+import com.kingja.trainingday.greendaobean.PlanClock;
 import com.kingja.trainingday.greendaobean.PlanDay;
 
 import java.util.List;
@@ -57,6 +59,12 @@ public class DBManager implements IDbOperator {
         return daoSession.getPlanDao();
     }
 
+    private PlanClockDao getPlanClockDao() {
+        DaoMaster daoMaster = new DaoMaster(db);
+        DaoSession daoSession = daoMaster.newSession();
+        return daoSession.getPlanClockDao();
+    }
+
     private PlanDayDao getPlanDayDao() {
         DaoMaster daoMaster = new DaoMaster(db);
         DaoSession daoSession = daoMaster.newSession();
@@ -65,59 +73,62 @@ public class DBManager implements IDbOperator {
 
     @Override
     public void addPlan(Plan plan) {
-        PlanDao bleInfoDao = getPlanDao();
-        bleInfoDao.insert(plan);
+        getPlanDao().insert(plan);
+    }
+
+    @Override
+    public void addPlanClock(PlanClock planClock) {
+        getPlanClockDao().insert(planClock);
     }
 
     @Override
     public void addPlanDay(PlanDay planDay) {
-        PlanDayDao bleInfoDao = getPlanDayDao();
-        bleInfoDao.insert(planDay);
+        getPlanDayDao().insert(planDay);
     }
 
     @Override
     public void removePlan(String id) {
-        PlanDao planDao = getPlanDao();
-        planDao.deleteByKey(id);
+        getPlanDao().deleteByKey(id);
     }
 
     @Override
     public void removePlanDay(long id) {
-        PlanDayDao planDao = getPlanDayDao();
-        planDao.deleteByKey(id);
+        getPlanDayDao().deleteByKey(id);
+    }
+
+    @Override
+    public void removePlanClock(long id) {
+        getPlanClockDao().deleteByKey(id);
     }
 
     @Override
     public List<Plan> getPlans() {
-        PlanDao planDao = getPlanDao();
-        List<Plan> plans = planDao.queryBuilder().orderDesc(PlanDao.Properties.CreateTime).list();
-        return plans;
+        return getPlanDao().queryBuilder().orderDesc(PlanDao.Properties.CreateTime).list();
     }
 
     @Override
     public List<PlanDay> getPlanDays(String planId) {
-        PlanDayDao planDayDao = getPlanDayDao();
-        List<PlanDay> planDays = planDayDao.queryBuilder().where(PlanDayDao.Properties.PlanId.eq(planId)).orderAsc
+        return getPlanDayDao().queryBuilder().where(PlanDayDao.Properties.PlanId.eq(planId)).orderAsc
                 (PlanDayDao.Properties.Date).list();
-        return planDays;
     }
 
     @Override
     public List<PlanDay> getPlanDays() {
-        PlanDayDao planDayDao = getPlanDayDao();
-        List<PlanDay> planDays = planDayDao.loadAll();
-        return planDays;
+        return getPlanDayDao().loadAll();
+    }
+
+    @Override
+    public List<PlanClock> getPlanClocks() {
+        return getPlanClockDao().loadAll();
     }
 
     @Override
     public void getPlans(PlanDay planDay) {
-        PlanDayDao planDao = getPlanDayDao();
-        planDao.update(planDay);
+        getPlanDayDao().update(planDay);
     }
 
     @Override
     public void updatePlanDays(PlanDay planDay) {
-        PlanDayDao planDayDao = getPlanDayDao();
-        planDayDao.update(planDay);
+        getPlanDayDao().update(planDay);
     }
 }

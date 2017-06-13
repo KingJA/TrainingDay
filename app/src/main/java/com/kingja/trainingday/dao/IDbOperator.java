@@ -1,6 +1,7 @@
 package com.kingja.trainingday.dao;
 
 import com.kingja.trainingday.greendaobean.Plan;
+import com.kingja.trainingday.greendaobean.PlanClock;
 import com.kingja.trainingday.greendaobean.PlanDay;
 
 import java.util.List;
@@ -14,11 +15,15 @@ import java.util.List;
 public interface IDbOperator {
     void addPlan(Plan plan);
 
+    void addPlanClock(PlanClock planClock);
+
     void addPlanDay(PlanDay planDay);
 
     void removePlan(String id);
 
     void removePlanDay(long id);
+
+    void removePlanClock(long id);
 
     void getPlans(PlanDay planDay);
 
@@ -27,5 +32,8 @@ public interface IDbOperator {
     List<Plan> getPlans();
 
     List<PlanDay> getPlanDays(String planId);
+
     List<PlanDay> getPlanDays();
+
+    List<PlanClock> getPlanClocks();
 }
