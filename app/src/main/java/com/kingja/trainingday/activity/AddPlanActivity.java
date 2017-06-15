@@ -32,6 +32,7 @@ import com.kingja.trainingday.inject.commonent.AppComponent;
 import com.kingja.trainingday.service.AlarmService;
 import com.kingja.trainingday.util.AlarmUtil;
 import com.kingja.trainingday.util.CheckUtil;
+import com.kingja.trainingday.util.GoUtil;
 import com.kingja.trainingday.util.StringUtil;
 import com.kingja.trainingday.util.TimeUtil;
 import com.kingja.trainingday.util.ToastUtil;
@@ -71,6 +72,7 @@ public class AddPlanActivity extends BaseTitleActivity implements View.OnClickLi
     private int selectedMonth;
     private int selectedDay;
     private LinearLayout mLlPlanDays;
+    private LinearLayout mLlRing;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -135,6 +137,7 @@ public class AddPlanActivity extends BaseTitleActivity implements View.OnClickLi
         mLlRemindType = (LinearLayout) findViewById(R.id.ll_remindType);
         mLlStartDate = (LinearLayout) findViewById(R.id.ll_startDate);
         mLlPlanDays = (LinearLayout) findViewById(R.id.ll_planDays);
+        mLlRing = (LinearLayout) findViewById(R.id.ll_ring);
     }
 
     private void showTimePickerDialog() {
@@ -217,6 +220,7 @@ public class AddPlanActivity extends BaseTitleActivity implements View.OnClickLi
         mLlRemindTime.setOnClickListener(this);
         mLlRemindType.setOnClickListener(this);
         mLlPlanDays.setOnClickListener(this);
+        mLlRing.setOnClickListener(this);
     }
 
 
@@ -333,6 +337,9 @@ public class AddPlanActivity extends BaseTitleActivity implements View.OnClickLi
                 break;
             case R.id.ll_planDays:
                 showPlanDaysDialog();
+                break;
+            case R.id.ll_ring:
+                GoUtil.goActivity(this,RingActivity.class);
                 break;
 
         }

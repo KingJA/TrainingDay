@@ -1,13 +1,15 @@
 package com.kingja.trainingday.activity;
 
-import android.util.Log;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 
 import com.kingja.trainingday.R;
+import com.kingja.trainingday.adapter.MainPagerAdapter;
 import com.kingja.trainingday.base.BaseTitleActivity;
+import com.kingja.trainingday.fragment.DefalRingFragment;
+import com.kingja.trainingday.fragment.LocalRingFragment;
 import com.kingja.trainingday.inject.commonent.AppComponent;
-
-import java.lang.reflect.Field;
-import java.util.ArrayList;
 
 /**
  * Description:TODO
@@ -16,6 +18,14 @@ import java.util.ArrayList;
  * Email:kingjavip@gmail.com
  */
 public class RingActivity extends BaseTitleActivity {
+    private TabLayout mTbRing;
+    private ViewPager mVpRing;
+
+
+    private String[] tabItems;
+
+    private Fragment[] mFragments=new Fragment[2];
+
     @Override
     protected void initComponent(AppComponent appComponent) {
 
@@ -23,18 +33,7 @@ public class RingActivity extends BaseTitleActivity {
 
     @Override
     protected void initVariable() {
-
-        ArrayList<Integer> list = new ArrayList<Integer>();
-        Field[] fields = R.raw.class.getDeclaredFields();
-        for (int i = 0; i < fields.length; i++) {
-            try {
-                list.add(fields[i].getInt(R.raw.class));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-        Log.e("raw文件目录", list.size()+"");
+        tabItems = getResources().getStringArray(R.array.rings);
 
     }
 
@@ -45,12 +44,21 @@ public class RingActivity extends BaseTitleActivity {
 
     @Override
     protected int getContentView() {
-        return R.layout.layout_rv;
+        return R.layout.activity_ring;
     }
 
     @Override
     protected void initView() {
+        mTbRing = (TabLayout) findViewById(R.id.tb_ring);
+        mVpRing = (ViewPager) findViewById(R.id.vp_ring);
 
+        mTbRing.setTabMode(TabLayout.MODE_FIXED);
+        mTbRing.addTab(mTbRing.newTab().setText(tabItems[0]));
+        mTbRing.addTab(mTbRing.newTab().setText(tabItems[1]));
+        mFragments[0]=new DefalRingFragment();
+        mFragments[1]=new LocalRingFragment();
+        mVpRing.setAdapter(new MainPagerAdapter(getSupportFragmentManager(), mFragments, tabItems));
+        mTbRing.setupWithViewPager(mVpRing);
     }
 
     @Override

@@ -190,7 +190,7 @@
 
             <TextView
                 android:gravity="end"
-                android:id="@+id/tv_ring"
+                android:id="@+id/tb_ring"
                 style="@style/font_9_12"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

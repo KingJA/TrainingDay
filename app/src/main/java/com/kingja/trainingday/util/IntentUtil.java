@@ -21,6 +21,7 @@ public class IntentUtil {
         context.startActivity(intent);
     }
 
+
     public static <T> T getData(Intent intent, Class<T> cls) {
         T t = (T) intent.getSerializableExtra(cls.getSimpleName());
         return t;

@@ -16,3 +16,11 @@ TODO
 
 FIX
 * java.lang.RuntimeException: Unable to instantiate service com.kingja.trainingday.service.AlarmService: java.lang.InstantiationException: can't instantiate class com.kingja.trainingday.service.AlarmService; no empty constructor
+
+
+GET
+* Android中assets目录和raw目录的区别和使用情况
+因为assets和res目录下的文件是可读不可写得，所有要想修改文件就要复制到手机存储里
+
+* assets的存取
+* uri的使用

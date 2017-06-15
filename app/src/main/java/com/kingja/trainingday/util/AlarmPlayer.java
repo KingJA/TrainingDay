@@ -2,8 +2,15 @@ package com.kingja.trainingday.util;
 
 import android.app.Service;
 import android.content.Context;
+import android.content.res.AssetFileDescriptor;
+import android.content.res.AssetManager;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Vibrator;
+import android.util.Log;
+
+import java.io.IOException;
 
 /**
  * Description:
@@ -60,6 +67,56 @@ public class AlarmPlayer {
             mVibrator.cancel();
         }
 
+    }
+
+    public void playAssets(String fileName) {
+        stop();
+        if (mMediaPlayer == null) {
+            mMediaPlayer = new MediaPlayer();
+        }
+        AssetManager assetManager = mContext.getAssets();
+        try {
+            AssetFileDescriptor assetFileDescriptor = assetManager.openFd(fileName);
+            mMediaPlayer.setDataSource(assetFileDescriptor.getFileDescriptor(),
+                    assetFileDescriptor.getStartOffset(),
+                    assetFileDescriptor.getLength());
+            mMediaPlayer.prepare();
+            mMediaPlayer.start();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void playUri(Uri uri) {
+        stop();
+        if (mMediaPlayer == null) {
+            mMediaPlayer = new MediaPlayer();
+        }
+        mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        try {
+            mMediaPlayer.setDataSource(mContext, uri);
+            mMediaPlayer.prepare();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        mMediaPlayer.start();
+    }
+
+    public void playPath(String path) {
+        stop();
+        if (mMediaPlayer == null) {
+            mMediaPlayer = new MediaPlayer();
+        }
+        mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        try {
+            mMediaPlayer.setDataSource(path);
+            mMediaPlayer.prepare();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        mMediaPlayer.start();
     }
 
 }

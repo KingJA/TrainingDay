@@ -13,6 +13,7 @@ import com.kingja.trainingday.inject.commonent.AppComponent;
 import com.kingja.trainingday.inject.commonent.DaggerAppComponent;
 import com.kingja.trainingday.inject.module.AppModule;
 import com.kingja.trainingday.service.InitializeService;
+import com.kingja.trainingday.util.AssetsUtil;
 import com.kingja.trainingday.util.StringUtil;
 import com.kingja.trainingday.util.TestDataProvider;
 import com.kingja.trainingday.util.TimeUtil;
@@ -50,6 +51,7 @@ public class App extends Application {
         sInstance = this;
         setupComponent();
 //        initTestData();
+        AssetsUtil.getInstance(this).copyAssetsToSD("rings", "rings");
     }
 
     private void initTestData() {

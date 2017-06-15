@@ -98,7 +98,7 @@ public class PersonalFragment extends BaseFragment {
     }
 
     @Override
-    protected void initNet() {
+    protected void initData() {
 
     }
 

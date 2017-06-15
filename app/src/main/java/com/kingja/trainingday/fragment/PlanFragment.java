@@ -68,7 +68,7 @@ public class PlanFragment extends BaseFragment {
     }
 
     @Override
-    protected void initNet() {
+    protected void initData() {
 
 
     }
