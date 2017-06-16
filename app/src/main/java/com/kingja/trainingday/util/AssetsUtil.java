@@ -72,21 +72,17 @@ public class AssetsUtil {
         try {
             String fileNames[] = context.getAssets().list(srcPath);
             if (fileNames.length > 0) {
-                File file = context.getExternalFilesDir(dstPath);
+                File file = new File(context.getFilesDir(), dstPath);
                 if (!file.exists()) file.mkdirs();
                 for (String fileName : fileNames) {
                     if (!srcPath.equals("")) { // assets 文件夹下的目录
-
-                        copyAssetsToDst(context, srcPath + File.separator + fileName, dstPath + File.separator +
-                                fileName);
+                        copyAssetsToDst(context, srcPath + File.separator + fileName, dstPath + File.separator + fileName);
                     } else { // assets 文件夹
                         copyAssetsToDst(context, fileName, dstPath + File.separator + fileName);
-
                     }
                 }
             } else {
-                Log.e("copyAssetsToDst", "copyAssetsToDst: ");
-                File outFile = context.getExternalFilesDir(dstPath);
+                File outFile = new File(context.getFilesDir(), dstPath);
                 InputStream is = context.getAssets().open(srcPath);
                 FileOutputStream fos = new FileOutputStream(outFile);
                 byte[] buffer = new byte[1024];
