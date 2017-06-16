@@ -9,6 +9,7 @@ import android.util.Log;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 
 /**
@@ -71,7 +72,6 @@ public class AssetsUtil {
         try {
             String fileNames[] = context.getAssets().list(srcPath);
             if (fileNames.length > 0) {
-
                 File file = context.getExternalFilesDir(dstPath);
                 if (!file.exists()) file.mkdirs();
                 for (String fileName : fileNames) {
@@ -86,7 +86,7 @@ public class AssetsUtil {
                 }
             } else {
                 Log.e("copyAssetsToDst", "copyAssetsToDst: ");
-                File outFile = new File(Environment.getExternalStorageDirectory(), dstPath);
+                File outFile = context.getExternalFilesDir(dstPath);
                 InputStream is = context.getAssets().open(srcPath);
                 FileOutputStream fos = new FileOutputStream(outFile);
                 byte[] buffer = new byte[1024];
@@ -110,5 +110,20 @@ public class AssetsUtil {
         void onSuccess();
 
         void onFailed(String error);
+    }
+
+    private void copy(Context context, String fromPath, String savePath) {
+        try {
+            String fileNames[] = context.getAssets().list(fromPath);
+            if (fileNames.length == 0) {
+                return;
+            }
+
+            for (String fileName : fileNames) {
+
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
