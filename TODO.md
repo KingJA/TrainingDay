@@ -21,6 +21,7 @@ FIX
 GET
 * Android中assets目录和raw目录的区别和使用情况
 因为assets和res目录下的文件是可读不可写得，所有要想修改文件就要复制到手机存储里
+assets不能获取绝对地址，只能通过URI返回，复制到内存或者SD卡可以获取绝对地址，方便管理
 
 * assets的存取
 * uri的使用
