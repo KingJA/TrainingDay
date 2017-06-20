@@ -2,6 +2,7 @@ package com.kingja.trainingday.activity;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
@@ -21,10 +22,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.kingja.rxbus2.RxBus;
+import com.kingja.rxbus2.Subscribe;
 import com.kingja.trainingday.R;
 import com.kingja.trainingday.base.BaseTitleActivity;
 import com.kingja.trainingday.dao.DBManager;
 import com.kingja.trainingday.event.RefreshEvent;
+import com.kingja.trainingday.event.RefreshRingEvent;
 import com.kingja.trainingday.greendaobean.Plan;
 import com.kingja.trainingday.greendaobean.PlanClock;
 import com.kingja.trainingday.greendaobean.PlanDay;
@@ -73,6 +76,7 @@ public class AddPlanActivity extends BaseTitleActivity implements View.OnClickLi
     private int selectedDay;
     private LinearLayout mLlPlanDays;
     private LinearLayout mLlRing;
+    private TextView mTvRing;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -102,8 +106,10 @@ public class AddPlanActivity extends BaseTitleActivity implements View.OnClickLi
         }
     }
 
+    @SuppressLint("WrongConstant")
     @Override
     public void initVariable() {
+        RxBus.getDefault().register(this);
         Calendar mCalendar = Calendar.getInstance();
         selectedYear = mCalendar.get(Calendar.YEAR);
         selectedMonth = mCalendar.get(Calendar.MONTH);
@@ -131,6 +137,7 @@ public class AddPlanActivity extends BaseTitleActivity implements View.OnClickLi
         mTvRemindTime = (TextView) findViewById(R.id.tv_remindTime);
         mTvRemindType = (TextView) findViewById(R.id.tv_remindType);
         mTvStartDate = (TextView) findViewById(R.id.tv_startDate);
+        mTvRing = (TextView) findViewById(R.id.tv_ring);
         mTvPlanDays = (TextView) findViewById(R.id.tv_planDays);
         mEtGift = (EditText) findViewById(R.id.et_gift);
         mLlRemindTime = (LinearLayout) findViewById(R.id.ll_remindTime);
@@ -339,9 +346,20 @@ public class AddPlanActivity extends BaseTitleActivity implements View.OnClickLi
                 showPlanDaysDialog();
                 break;
             case R.id.ll_ring:
-                GoUtil.goActivity(this,RingActivity.class);
+                GoUtil.goActivity(this, RingActivity.class);
                 break;
 
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        RxBus.getDefault().unregister(this);
+        super.onDestroy();
+    }
+
+    @Subscribe
+    public void setRing(RefreshRingEvent event) {
+        mTvRing.setText(event.getRingName());
     }
 }

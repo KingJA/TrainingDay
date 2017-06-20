@@ -8,11 +8,16 @@ import android.util.Log;
 
 import com.kingja.recyclerviewhelper.LayoutHelper;
 import com.kingja.recyclerviewhelper.RecyclerViewHelper;
+import com.kingja.rxbus2.RxBus;
+import com.kingja.rxbus2.Subscribe;
 import com.kingja.trainingday.R;
 import com.kingja.trainingday.adapter.LocalRingsAdapter;
 import com.kingja.trainingday.base.App;
 import com.kingja.trainingday.base.BaseFragment;
 import com.kingja.trainingday.bean.Ring;
+import com.kingja.trainingday.event.ClearDefaultRing;
+import com.kingja.trainingday.event.ClearLocalRing;
+import com.kingja.trainingday.event.RefreshRingEvent;
 import com.kingja.trainingday.inject.commonent.AppComponent;
 import com.kingja.trainingday.util.AlarmPlayer;
 import com.kingja.trainingday.util.Constants;
@@ -40,6 +45,8 @@ public class LocalRingFragment extends BaseFragment {
 
     @Override
     protected void initVariable() {
+        RxBus.getDefault().register(this);
+        String ringPath = (String) Sp.getInstance(getActivity()).getData(Constants.RING_PATH, "");
         Cursor cursor = getActivity().getContentResolver().query(
                 MediaStore.Audio.Media.INTERNAL_CONTENT_URI, media_music_info,
                 null, null, MediaStore.Audio.Media.DEFAULT_SORT_ORDER);
@@ -47,7 +54,7 @@ public class LocalRingFragment extends BaseFragment {
         for (int i = 0; i < cursor.getCount(); i++) {
             String displayName = cursor.getString(0);
             String path = cursor.getString(1);
-            rings.add(new Ring(displayName, path));
+            rings.add(new Ring(displayName, path, ringPath.equals(path)));
             cursor.moveToNext();
         }
     }
@@ -70,6 +77,8 @@ public class LocalRingFragment extends BaseFragment {
                 (singleRv);
         mLocalRingsAdapter.setOnItemClickListener((ring, position) -> {
             mLocalRingsAdapter.selectPosition(position);
+            RxBus.getDefault().post(new ClearDefaultRing());
+            RxBus.getDefault().post(new RefreshRingEvent(ring.getRingName()));
             AlarmPlayer.getInstance(App.getContext()).playPath(ring.getPath());
             Sp.getInstance(getActivity()).putData(Constants.RING_PATH, ring.getPath());
         });
@@ -79,6 +88,16 @@ public class LocalRingFragment extends BaseFragment {
     @Override
     protected int getContentId() {
         return R.layout.layout_rv;
+    }
+
+    @Subscribe
+    public void clearSelectedStatus(ClearLocalRing clearLocalRing) {
+        mLocalRingsAdapter.clearSelectedStatus();
+    }
+    @Override
+    public void onDestroy() {
+        RxBus.getDefault().unregister(this);
+        super.onDestroy();
     }
 }
 

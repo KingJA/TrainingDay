@@ -16,7 +16,7 @@ public class StringUtil {
         return UUID.randomUUID().toString().replace("-", "");
     }
 
-    public static String getPercent(int upNumber, int downNumber) {
-        return Math.round(upNumber * 100f / downNumber) + "%";
+    public static int getPercent(int upNumber, int downNumber) {
+        return Math.round(upNumber * 100f / downNumber);
     }
 }

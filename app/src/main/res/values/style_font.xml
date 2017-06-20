@@ -45,6 +45,10 @@
         <item name="android:textSize">15sp</item>
         <item name="android:textColor">@color/k_green</item>
     </style>
+    <style name="font_green_30">
+        <item name="android:textSize">30sp</item>
+        <item name="android:textColor">@color/k_green</item>
+    </style>
 
 
     <style name="font_b_18">

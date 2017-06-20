@@ -1,13 +1,17 @@
 package com.kingja.trainingday.fragment;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
-import com.kingja.recyclerviewhelper.BaseRvAdaper;
 import com.kingja.recyclerviewhelper.LayoutHelper;
 import com.kingja.recyclerviewhelper.RecyclerViewHelper;
 import com.kingja.rxbus2.RxBus;
@@ -21,12 +25,13 @@ import com.kingja.trainingday.dao.DBManager;
 import com.kingja.trainingday.event.RefreshEvent;
 import com.kingja.trainingday.greendaobean.Plan;
 import com.kingja.trainingday.inject.commonent.AppComponent;
-import com.kingja.trainingday.util.GoUtil;
 
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.Unbinder;
 
 /**
  * Description:TODO
@@ -39,6 +44,10 @@ public class PlanFragment extends BaseFragment {
     AppCompatImageView aivAddPlan;
     @BindView(R.id.rv_add_plan)
     RecyclerView rvAddPlan;
+    @BindView(R.id.tv_empty)
+    TextView tvEmpty;
+    @BindView(R.id.ll_empty)
+    LinearLayout llEmpty;
     private PlanAdapter planAdapter;
     private List<Plan> plans;
 
@@ -55,6 +64,7 @@ public class PlanFragment extends BaseFragment {
 
     @Override
     protected void initViewAndListener() {
+
         planAdapter = new PlanAdapter(getActivity(), plans);
         planAdapter.setOnItemClickListener((plan, position) -> {
             PlanDetailActivity.goActivity(getActivity(), plan, position);
@@ -69,8 +79,8 @@ public class PlanFragment extends BaseFragment {
 
     @Override
     protected void initData() {
-
-
+        tvEmpty.setText("还没有计划，快去添加吧");
+        llEmpty.setVisibility(plans.size() > 0 ? View.GONE : View.VISIBLE);
     }
 
     @Override
@@ -80,8 +90,6 @@ public class PlanFragment extends BaseFragment {
 
     @OnClick({R.id.aiv_add_plan})
     public void addPlan(View view) {
-//        GoUtil.goActivity(getActivity(), AddPlanActivity.class);
-
         presentActivity(view);
 
     }
@@ -102,6 +110,7 @@ public class PlanFragment extends BaseFragment {
     @Subscribe
     public void reFreshPlans(RefreshEvent event) {
         plans = DBManager.getInstance().getPlans();
+        llEmpty.setVisibility(plans.size() > 0 ? View.GONE : View.VISIBLE);
         planAdapter.setData(plans);
     }
 

@@ -10,6 +10,7 @@ import com.kingja.trainingday.base.BaseTitleActivity;
 import com.kingja.trainingday.fragment.DefalRingFragment;
 import com.kingja.trainingday.fragment.LocalRingFragment;
 import com.kingja.trainingday.inject.commonent.AppComponent;
+import com.kingja.trainingday.util.AlarmPlayer;
 
 /**
  * Description:TODO
@@ -24,7 +25,7 @@ public class RingActivity extends BaseTitleActivity {
 
     private String[] tabItems;
 
-    private Fragment[] mFragments=new Fragment[2];
+    private Fragment[] mFragments = new Fragment[2];
 
     @Override
     protected void initComponent(AppComponent appComponent) {
@@ -49,14 +50,14 @@ public class RingActivity extends BaseTitleActivity {
 
     @Override
     protected void initView() {
-        mTbRing = (TabLayout) findViewById(R.id.tb_ring);
+        mTbRing = (TabLayout) findViewById(R.id.tv_ring);
         mVpRing = (ViewPager) findViewById(R.id.vp_ring);
 
         mTbRing.setTabMode(TabLayout.MODE_FIXED);
         mTbRing.addTab(mTbRing.newTab().setText(tabItems[0]));
         mTbRing.addTab(mTbRing.newTab().setText(tabItems[1]));
-        mFragments[0]=new DefalRingFragment();
-        mFragments[1]=new LocalRingFragment();
+        mFragments[0] = new DefalRingFragment();
+        mFragments[1] = new LocalRingFragment();
         mVpRing.setAdapter(new MainPagerAdapter(getSupportFragmentManager(), mFragments, tabItems));
         mTbRing.setupWithViewPager(mVpRing);
     }
@@ -69,5 +70,11 @@ public class RingActivity extends BaseTitleActivity {
     @Override
     protected void initData() {
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        AlarmPlayer.getInstance(this).stop();
     }
 }

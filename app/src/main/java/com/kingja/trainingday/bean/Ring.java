@@ -24,7 +24,13 @@ public class Ring {
         this.path = path;
     }
 
-    private String path="-1";
+    public Ring(String ringName, String path, boolean selected) {
+        this.ringName = ringName;
+        this.path = path;
+        this.selected = selected;
+    }
+
+    private String path = "-1";
     private Uri uri;
     private boolean selected;
 

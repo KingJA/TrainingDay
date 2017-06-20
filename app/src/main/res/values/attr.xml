@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="CircleProgress">
+        <attr name="cp_progress" format="integer"/><!--进度-->
+        <attr name="cp_tip" format="string"/><!--底部提示文字-->
+        <attr name="cp_unreachedWidth" format="dimension"/><!--未完成线条宽度-->
+        <attr name="cp_unreachedColor" format="color|reference"/><!--未完成线条颜色-->
+        <attr name="cp_reachedWidth" format="dimension"/><!--完成线条宽度-->
+        <attr name="cp_reachedColor" format="color|reference"/><!--完成线条颜色-->
+
+
+    </declare-styleable>
+
+</resources>

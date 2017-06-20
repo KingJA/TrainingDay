@@ -1,5 +1,9 @@
 package com.kingja.trainingday.fragment;
 
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.kingja.trainingday.R;
@@ -8,12 +12,15 @@ import com.kingja.trainingday.dao.DBManager;
 import com.kingja.trainingday.greendaobean.Plan;
 import com.kingja.trainingday.greendaobean.PlanDay;
 import com.kingja.trainingday.inject.commonent.AppComponent;
+import com.kingja.trainingday.ui.CircleProgress;
 import com.kingja.trainingday.util.CheckUtil;
 import com.kingja.trainingday.util.StringUtil;
 
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 /**
  * Description:TODO
@@ -30,10 +37,11 @@ public class PersonalFragment extends BaseFragment {
     TextView tvSequenceFinishedPlanCount;
     @BindView(R.id.tv_finishedDaysCount)
     TextView tvFinishedDaysCount;
-    @BindView(R.id.tv_sequenceFinishedPlanRate)
-    TextView tvSequenceFinishedPlanRate;
-    @BindView(R.id.tv_planFinishedRate)
-    TextView tvPlanFinishedRate;
+    @BindView(R.id.cp_sequenceFinishedPlanRate)
+    CircleProgress cpSequenceFinishedPlanRate;
+    @BindView(R.id.cp_planFinishedRate)
+    CircleProgress cpPlanFinishedRate;
+
     private List<Plan> plans;
     private List<PlanDay> planDays;
 
@@ -87,13 +95,13 @@ public class PersonalFragment extends BaseFragment {
 
     @Override
     protected void initViewAndListener() {
-        tvTotlePlanCount.setText("总计划数：" + plans.size());
-        tvActionPlanCount.setText("进行中计划数：" + getActionPlanCount(plans));
-        tvSequenceFinishedPlanCount.setText("连击完成计划数：" + getSequenceFinishedPlanCount(plans));
-        tvFinishedDaysCount.setText("完成天数：" + getFinishedCount(planDays));
-        tvSequenceFinishedPlanRate.setText("连击完成率：" + StringUtil.getPercent(getSequenceFinishedPlanCount(plans),
+        tvTotlePlanCount.setText(plans.size() + "");
+        tvActionPlanCount.setText(getActionPlanCount(plans) + "");
+        tvSequenceFinishedPlanCount.setText(getSequenceFinishedPlanCount(plans) + "");
+        tvFinishedDaysCount.setText(getFinishedCount(planDays) + "");
+        cpSequenceFinishedPlanRate.setProgress(StringUtil.getPercent(getSequenceFinishedPlanCount(plans),
                 plans.size()));
-        tvPlanFinishedRate.setText("计划完成率：" + StringUtil.getPercent(getFinishedCount(planDays), planDays.size()));
+        cpPlanFinishedRate.setProgress(StringUtil.getPercent(getFinishedCount(planDays), planDays.size()));
 
     }
 
@@ -106,5 +114,6 @@ public class PersonalFragment extends BaseFragment {
     protected int getContentId() {
         return R.layout.fragment_personal;
     }
+
 
 }

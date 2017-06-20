@@ -8,10 +8,11 @@
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_add_plan"
-        tools:listitem="@layout/item_plan"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        tools:listitem="@layout/item_plan"/>
 
+    <include layout="@layout/layout_empty"/>
 
 
     <android.support.v7.widget.AppCompatImageView

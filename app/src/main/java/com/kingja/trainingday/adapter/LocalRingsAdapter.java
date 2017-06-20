@@ -49,7 +49,7 @@ public class LocalRingsAdapter extends BaseRvAdaper<Ring> {
         holder.tv_ringName.setText(ring.getRingName());
 
         Sp.getInstance(context).getData(Constants.RING_PATH, "");
-        boolean selected = ring.isSelected() || ring.getPath().equals(savedRingPath);
+        boolean selected = ring.isSelected();
         holder.tv_ringName.setTextColor(selected ? context.getResources().getColor(R.color.colorAccent) :
                 context.getResources().getColor(R.color.k_font_6));
         holder.rb_selected.setChecked(selected);
@@ -73,6 +73,13 @@ public class LocalRingsAdapter extends BaseRvAdaper<Ring> {
             ring.setSelected(false);
         }
         list.get(position).setSelected(true);
+        notifyDataSetChanged();
+    }
+
+    public void clearSelectedStatus() {
+        for (Ring ring : list) {
+            ring.setSelected(false);
+        }
         notifyDataSetChanged();
     }
 }

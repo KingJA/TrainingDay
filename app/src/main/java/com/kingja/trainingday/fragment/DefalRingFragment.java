@@ -1,21 +1,26 @@
 package com.kingja.trainingday.fragment;
 
-import android.content.res.AssetManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 
 import com.kingja.recyclerviewhelper.LayoutHelper;
 import com.kingja.recyclerviewhelper.RecyclerViewHelper;
+import com.kingja.rxbus2.RxBus;
+import com.kingja.rxbus2.Subscribe;
 import com.kingja.trainingday.R;
 import com.kingja.trainingday.adapter.LocalRingsAdapter;
 import com.kingja.trainingday.base.App;
 import com.kingja.trainingday.base.BaseFragment;
 import com.kingja.trainingday.bean.Ring;
+import com.kingja.trainingday.event.ClearDefaultRing;
+import com.kingja.trainingday.event.ClearLocalRing;
+import com.kingja.trainingday.event.RefreshRingEvent;
 import com.kingja.trainingday.inject.commonent.AppComponent;
 import com.kingja.trainingday.util.AlarmPlayer;
 import com.kingja.trainingday.util.Constants;
 import com.kingja.trainingday.util.Sp;
 
-import java.io.IOException;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,22 +36,20 @@ public class DefalRingFragment extends BaseFragment {
     @BindView(R.id.singleRv)
     RecyclerView singleRv;
     private List<Ring> rings = new ArrayList<>();
-    private LocalRingsAdapter mLocalRingsAdapter;
+    private LocalRingsAdapter mDefaultRingsAdapter;
 
 
     @Override
     protected void initVariable() {
-        AssetManager assets = getActivity().getAssets();
-        try {
-            String[] ringArr = assets.list("rings");
-            String path = "file:///android_asset/rings/";
-            for (String ring : ringArr) {
-                rings.add(new Ring(ring,path+ring));
+        RxBus.getDefault().register(this);
+        File ringsFile = new File(getActivity().getFilesDir(), "rings");
+        String ringPath = (String) Sp.getInstance(getActivity()).getData(Constants.RING_PATH, "");
+        if (ringsFile.exists() && ringsFile.listFiles().length > 0) {
+            File[] files = ringsFile.listFiles();
+            for (File file : files) {
+                rings.add(new Ring(file.getName(), file.getAbsolutePath(),ringPath.equals(file.getAbsolutePath())));
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
-
 
     }
 
@@ -57,7 +60,7 @@ public class DefalRingFragment extends BaseFragment {
 
     @Override
     protected void initViewAndListener() {
-        mLocalRingsAdapter = new LocalRingsAdapter(getActivity(), rings);
+        mDefaultRingsAdapter = new LocalRingsAdapter(getActivity(), rings);
 
     }
 
@@ -65,12 +68,13 @@ public class DefalRingFragment extends BaseFragment {
     protected void initData() {
 
         new RecyclerViewHelper.Builder(getActivity()).setLayoutStyle(LayoutHelper.LayoutStyle.VERTICAL_LIST)
-                .setAdapter(mLocalRingsAdapter).build().attachToRecyclerView
+                .setAdapter(mDefaultRingsAdapter).build().attachToRecyclerView
                 (singleRv);
-        mLocalRingsAdapter.setOnItemClickListener((ring, position) -> {
-            mLocalRingsAdapter.selectPosition(position);
+        mDefaultRingsAdapter.setOnItemClickListener((ring, position) -> {
+            mDefaultRingsAdapter.selectPosition(position);
 
-//            AlarmPlayer.getInstance(App.getContext()).playAssets("rings/"+ring.getRingName());
+            RxBus.getDefault().post(new ClearLocalRing());
+            RxBus.getDefault().post(new RefreshRingEvent(ring.getRingName()));
             AlarmPlayer.getInstance(App.getContext()).playPath(ring.getPath());
             Sp.getInstance(getActivity()).putData(Constants.RING_PATH, ring.getPath());
         });
@@ -82,4 +86,19 @@ public class DefalRingFragment extends BaseFragment {
         return R.layout.layout_rv;
     }
 
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        Log.e(TAG, "onHiddenChanged: "+hidden );
+        super.onHiddenChanged(hidden);
+    }
+
+    @Subscribe
+    public void clearSelectedStatus(ClearDefaultRing clearLocalRing) {
+        mDefaultRingsAdapter.clearSelectedStatus();
+    }
+    @Override
+    public void onDestroy() {
+        RxBus.getDefault().unregister(this);
+        super.onDestroy();
+    }
 }
