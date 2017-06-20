@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 import com.kingja.trainingday.R;
+import com.kingja.trainingday.util.AlarmPlayer;
 
 /**
  * Description:TODO
@@ -60,6 +61,7 @@ public class RippleLinearLayout extends LinearLayout {
     public boolean onTouchEvent(MotionEvent event) {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
+                AlarmPlayer.getInstance(getContext()).playRaw(R.raw.ice,false);
                 pressedTransfer(normalColor, pressedColor);
                 break;
             case MotionEvent.ACTION_UP:

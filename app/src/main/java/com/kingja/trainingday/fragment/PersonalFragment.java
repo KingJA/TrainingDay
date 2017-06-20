@@ -1,26 +1,25 @@
 package com.kingja.trainingday.fragment;
 
-import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.kingja.trainingday.R;
+import com.kingja.trainingday.activity.WeaponActivity;
 import com.kingja.trainingday.base.BaseFragment;
 import com.kingja.trainingday.dao.DBManager;
 import com.kingja.trainingday.greendaobean.Plan;
 import com.kingja.trainingday.greendaobean.PlanDay;
 import com.kingja.trainingday.inject.commonent.AppComponent;
 import com.kingja.trainingday.ui.CircleProgress;
+import com.kingja.trainingday.ui.RippleLinearLayout;
 import com.kingja.trainingday.util.CheckUtil;
+import com.kingja.trainingday.util.GoUtil;
 import com.kingja.trainingday.util.StringUtil;
 
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
+import butterknife.OnClick;
 
 /**
  * Description:TODO
@@ -41,6 +40,8 @@ public class PersonalFragment extends BaseFragment {
     CircleProgress cpSequenceFinishedPlanRate;
     @BindView(R.id.cp_planFinishedRate)
     CircleProgress cpPlanFinishedRate;
+    @BindView(R.id.rll_weapon)
+    RippleLinearLayout rllWeapon;
 
     private List<Plan> plans;
     private List<PlanDay> planDays;
@@ -115,5 +116,13 @@ public class PersonalFragment extends BaseFragment {
         return R.layout.fragment_personal;
     }
 
+    @OnClick({R.id.rll_weapon})
+    public void onSwitch(View view) {
+        switch (view.getId()) {
+            case R.id.rll_weapon:
+                GoUtil.goActivity(getActivity(), WeaponActivity.class);
+                break;
+        }
+    }
 
 }

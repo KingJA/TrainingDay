@@ -3,14 +3,15 @@
               xmlns:app="http://schemas.android.com/apk/res-auto"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:orientation="vertical">
+              android:orientation="vertical"
+              android:padding="12dp">
 
 
     <LinearLayout
-        android:paddingTop="12dp"
-        android:paddingBottom="12dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:paddingBottom="12dp"
+        android:paddingTop="12dp">
 
         <LinearLayout
             android:layout_width="0dp"
@@ -59,7 +60,9 @@
                 android:layout_height="wrap_content"
                 android:text="进行中"/>
         </LinearLayout>
+
         <View style="@style/divider_nomal_vertical"/>
+
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -82,7 +85,9 @@
                 android:layout_height="wrap_content"
                 android:text="连击完成"/>
         </LinearLayout>
+
         <View style="@style/divider_nomal_vertical"/>
+
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -109,34 +114,74 @@
     </LinearLayout>
 
 
-
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:padding="24dp">
 
         <com.kingja.trainingday.ui.CircleProgress
             android:id="@+id/cp_sequenceFinishedPlanRate"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="12dp"
             android:layout_weight="1"
             app:cp_reachedColor="#06aafc"
-            app:cp_unreachedColor="#dfdede"
             app:cp_reachedWidth="5dp"
-            app:cp_unreachedWidth="3dp"
             app:cp_tip="连击完成率"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"/>
+            app:cp_unreachedColor="#dfdede"
+            app:cp_unreachedWidth="3dp"/>
 
         <com.kingja.trainingday.ui.CircleProgress
             android:id="@+id/cp_planFinishedRate"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             app:cp_reachedColor="#36844e"
-            app:cp_unreachedColor="#dfdede"
             app:cp_reachedWidth="5dp"
-            app:cp_unreachedWidth="3dp"
             app:cp_tip="计划完成率"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"/>
+            app:cp_unreachedColor="#dfdede"
+            app:cp_unreachedWidth="3dp"/>
 
     </LinearLayout>
 
+    <com.kingja.trainingday.ui.RippleLinearLayout
+        android:id="@+id/rll_weapon"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/shape_edit"
+            android:padding="12dp"
+            android:text="武器库"/>
+    </com.kingja.trainingday.ui.RippleLinearLayout>
+
+    <com.kingja.trainingday.ui.RippleLinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/shape_edit"
+            android:padding="12dp"
+            android:text="我的勋章"/>
+    </com.kingja.trainingday.ui.RippleLinearLayout>
+
+    <com.kingja.trainingday.ui.RippleLinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/shape_edit"
+            android:padding="12dp"
+            android:text="设置"/>
+    </com.kingja.trainingday.ui.RippleLinearLayout>
 
 </LinearLayout>

@@ -47,7 +47,7 @@ public class AlarmPlayer {
             vibrate();
         }
         mMediaPlayer = MediaPlayer.create(mContext, resId);
-        mMediaPlayer.setLooping(true);
+        mMediaPlayer.setLooping(false);
         mMediaPlayer.start();
     }
 
